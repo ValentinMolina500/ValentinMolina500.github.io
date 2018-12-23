@@ -47,12 +47,12 @@ var myGameArea = {
         this.frameNo = 0;
         this.interval = setInterval(updateGameArea, 20);
         window.addEventListener('mousedown', function (e) {
-            console.log(e.pageX);
+            e.preventDefault();
             myGameArea.x = e.pageX;
             myGameArea.y = e.pageY;
-            e.preventDefault();
         })
         window.addEventListener('mouseup', function (e) {
+            e.preventDefault();
             myGameArea.x = false;
             myGameArea.y = false;
         })
