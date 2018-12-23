@@ -115,6 +115,9 @@ var canvas = document.getElementById("myCanvas");
 /** @type {CanvasRenderingContext2D} */
 
 var ctx = canvas.getContext("2d");
+var output = document.getElementById("output");
+document.addEventListener("touchstart", touchHandler);
+document.addEventListener("touchmove", touchHandler);
 var mainSquare;
 var myEnemies = [];
 var distances = [295, 265, 235, 205, 175, 145, 115, 85, 55, 25];
@@ -212,7 +215,7 @@ function updateGameArea() {
 
   myGameArea.frameNo += 1;
 
-  if (myGameArea.frameNo == 1 || everyInterval(150)) {
+  if (myGameArea.frameNo == 1 || everyInterval(50)) {
     x = 0;
     y = distances[Math.floor(Math.random() * distances.length)];
     myEnemies.push(new component(50, 25, x, y, enemyImage));
@@ -230,6 +233,15 @@ function updateGameArea() {
 function everyInterval(n) {
   if (myGameArea.frameNo / n % 1 == 0) return true;
   return false;
+}
+
+function touchHandler(e) {
+  if (e.touches) {
+    mainSquare.x = e.touches[0].pageX - canvas.offsetLeft - mainSquare.width / 2;
+    mainSquare.y = e.touches[0].pageY - canvas.offsetTop - mainSquare.height / 2;
+    output.innerHTML = "Touch: " + " x: " + mainSquare.x + ", y: " + mainSquare.y;
+    e.preventDefault();
+  }
 }
 
 startGame();
@@ -260,7 +272,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55690" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57305" + '/');
 
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);

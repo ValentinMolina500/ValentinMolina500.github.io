@@ -1,6 +1,9 @@
 var canvas = document.getElementById("myCanvas");
 /** @type {CanvasRenderingContext2D} */
 var ctx = canvas.getContext("2d");
+var output = document.getElementById("output");
+document.addEventListener("touchstart", touchHandler);
+document.addEventListener("touchmove", touchHandler);
 
 var mainSquare;
 var myEnemies = [];
@@ -80,7 +83,7 @@ function updateGameArea() {
         mainSquare.y = myGameArea.y
     }
     myGameArea.frameNo += 1;
-    if (myGameArea.frameNo == 1 || everyInterval(150)) {
+    if (myGameArea.frameNo == 1 || everyInterval(50)) {
         x = 0;
         y = distances[Math.floor(Math.random() * distances.length)];
         myEnemies.push(new component(50, 25, x, y, enemyImage));
@@ -98,6 +101,15 @@ function everyInterval(n) {
     if((myGameArea.frameNo / n ) % 1 == 0)
         return true;
     return false;
+}
+
+function touchHandler(e) {
+    if(e.touches) {
+        mainSquare.x = e.touches[0].pageX - canvas.offsetLeft - mainSquare.width / 2;
+        mainSquare.y = e.touches[0].pageY - canvas.offsetTop - mainSquare.height / 2;
+        output.innerHTML = "Touch: "+ " x: " + mainSquare.x + ", y: " + mainSquare.y;
+        e.preventDefault();
+    }
 }
 
 startGame();
