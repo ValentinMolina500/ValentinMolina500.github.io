@@ -118,10 +118,12 @@ var ctx = canvas.getContext("2d"); // initial variables
 
 var mainSquare;
 var myEnemies = [];
+var myEnemiesUp = [];
 var distances = [295, 265, 235, 205, 175, 145, 115, 85, 55, 25];
 var mainSquareImage = document.getElementById("source");
 var enemyImage = document.getElementById("enemy");
 var buttonImage = document.getElementById("button");
+var buttonUpImage = document.getElementById("enemyUp");
 var myUpBtn;
 var myDownBtn;
 var myLeftBtn;
@@ -133,9 +135,9 @@ function startGame() {
   myUpBtn = new component(32, 32, 380, 210, buttonImage);
   myDownBtn = new component(32, 32, 380, 270, buttonImage);
   myLeftBtn = new component(32, 32, 350, 240, buttonImage);
-  myRightBtn = new component(32, 32, 410, 240, buttonImage);
-  myMusic = new sound("assets/audio/mainTheme.mp3");
-  myMusic.play();
+  myRightBtn = new component(32, 32, 410, 240, buttonImage); //myMusic = new sound("assets/audio/mainTheme.mp3");
+  //myMusic.play();
+
   myGameArea.start();
 }
 
@@ -173,23 +175,30 @@ var myGameArea = {
     this.frameNo = 0;
     this.interval = setInterval(updateGameArea, 20);
     window.addEventListener('mousedown', function (e) {
-      console.log(e.pageX);
+      e.preventDefault();
       myGameArea.x = e.pageX;
       myGameArea.y = e.pageY;
-      e.preventDefault();
     });
     window.addEventListener('mouseup', function (e) {
+      e.preventDefault();
       myGameArea.x = false;
       myGameArea.y = false;
     });
     window.addEventListener('touchstart', function (e) {
+      e.preventDefault();
       myGameArea.x = e.pageX;
       myGameArea.y = e.pageY;
-      e.preventDefault();
+      myGameArea.x = e.touches[0].pageX;
+      myGameArea.y = e.touches[0].pageY;
     });
     window.addEventListener('touchend', function (e) {
       myGameArea.x = false;
       myGameArea.y = false;
+    });
+    window.addEventListener("touchmove", function (e) {
+      e.preventDefault();
+      myGameArea.x = e.touches[0].pageX;
+      myGameArea.y = e.touches[0].pageY;
     });
   },
   clear: function clear() {
@@ -270,7 +279,6 @@ function updateGameArea() {
 
   if (myGameArea.x && myGameArea.y) {
     if (myUpBtn.clicked()) {
-      console.log("here");
       mainSquare.y += -2;
     }
 
@@ -294,6 +302,13 @@ function updateGameArea() {
     }
   }
 
+  for (i = 0; i < myEnemiesUp.length; i++) {
+    if (mainSquare.collision(myEnemiesUp[i])) {
+      myGameArea.stop();
+      return;
+    }
+  }
+
   myGameArea.clear();
   myGameArea.frameNo += 1;
 
@@ -308,6 +323,18 @@ function updateGameArea() {
     myEnemies[i].update();
   }
 
+  if (everyInterval(100)) {
+    x = distances[Math.floor(Math.random() * distances.length)];
+    y = canvas.height + 50;
+    myEnemiesUp.push(new component(25, 50, x, y, enemyUpImage));
+  }
+
+  for (i = 0; i < myEnemiesUp.length; i++) {
+    myEnemiesUp[i].y += -1;
+    myEnemiesUp[i].update();
+  }
+
+  console.log(myEnemiesUp.length);
   myUpBtn.update();
   myDownBtn.update();
   myLeftBtn.update();
@@ -349,7 +376,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58297" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50009" + '/');
 
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);

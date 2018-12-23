@@ -5,10 +5,12 @@ var ctx = canvas.getContext("2d");
 // initial variables
 var mainSquare;
 var myEnemies = [];
+var myEnemiesUp = [];
 const distances = [295, 265, 235, 205, 175, 145, 115, 85, 55, 25];
 const mainSquareImage = document.getElementById("source");
 const enemyImage = document.getElementById("enemy");
 const buttonImage = document.getElementById("button");
+var buttonUpImage = document.getElementById("enemyUp");
 var myUpBtn;
 var myDownBtn;
 var myLeftBtn;
@@ -21,8 +23,8 @@ function startGame() {
     myDownBtn = new component(32, 32, 380, 270, buttonImage);
     myLeftBtn = new component(32, 32, 350, 240, buttonImage);
     myRightBtn = new component(32, 32, 410, 240, buttonImage);
-    myMusic = new sound("assets/audio/mainTheme.mp3");
-    myMusic.play();
+    //myMusic = new sound("assets/audio/mainTheme.mp3");
+    //myMusic.play();
     myGameArea.start();
 }
 
@@ -131,7 +133,6 @@ function updateGameArea() {
     var x, y;
     if(myGameArea.x && myGameArea.y) {
         if(myUpBtn.clicked()) {
-            console.log("here");
             mainSquare.y += -2;
         }
         if (myDownBtn.clicked()) {
@@ -151,6 +152,13 @@ function updateGameArea() {
             return;
         }
     }
+    for (i = 0; i < myEnemiesUp.length; i++)
+    {
+        if (mainSquare.collision(myEnemiesUp[i])) {
+            myGameArea.stop();
+            return;
+        }
+    }
     myGameArea.clear();
     myGameArea.frameNo += 1;
     if (myGameArea.frameNo == 1 || everyInterval(50)) {
@@ -163,6 +171,17 @@ function updateGameArea() {
         myEnemies[i].x += 1;
         myEnemies[i].update();
     }
+    if (everyInterval(100)) {
+        x = distances[Math.floor(Math.random() * distances.length)];
+        y = canvas.height + 50;
+        myEnemiesUp.push(new component(25, 50, x, y, enemyUpImage));
+    }
+    for (i = 0; i < myEnemiesUp.length; i++)
+    {
+        myEnemiesUp[i].y += -1;
+        myEnemiesUp[i].update();
+    }
+    console.log(myEnemiesUp.length);
     myUpBtn.update();
     myDownBtn.update();
     myLeftBtn.update();
@@ -177,4 +196,4 @@ function everyInterval(n) {
     return false;
 }
 
-//startGame();
+startGame();
