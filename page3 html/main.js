@@ -170,4 +170,4 @@ function everyInterval(n) {
     return false;
 }
 
-startGame();
+//startGame();
