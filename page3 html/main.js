@@ -57,20 +57,20 @@ var myGameArea = {
             myGameArea.y = false;
         })
         window.addEventListener('touchstart', function (e) {
+            e.preventDefault();
             myGameArea.x = e.pageX;
             myGameArea.y = e.pageY;
             myGameArea.x = e.touches[0].pageX;
             myGameArea.y = e.touches[0].pageY;
-            e.preventDefault();
         })
         window.addEventListener('touchend', function (e) {
             myGameArea.x = false;
             myGameArea.y = false;
         })
         window.addEventListener("touchmove", function (e) {
+            e.preventDefault();
             myGameArea.x = e.touches[0].pageX;
             myGameArea.y = e.touches[0].pageY;
-            e.preventDefault();
         })
         },
     clear: function() {
