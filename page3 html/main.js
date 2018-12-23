@@ -65,6 +65,10 @@ var myGameArea = {
             myGameArea.x = false;
             myGameArea.y = false;
         })
+        window.addEventListener('touchmove', function (e) {
+            myGameArea.x = e.touches[0].screenX;
+            myGameArea.y = e.touches[0].screenY;
+        })
         },
     clear: function() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
