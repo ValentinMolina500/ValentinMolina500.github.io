@@ -93,6 +93,7 @@ function updateGameArea() {
         myEnemies[i].x += 1;
         myEnemies[i].update();
     }
+    console.log(myGameArea.frameNo);
     mainSquare.newPos();
     mainSquare.update();
 }
