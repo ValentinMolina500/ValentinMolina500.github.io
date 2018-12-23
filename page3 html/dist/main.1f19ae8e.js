@@ -114,28 +114,82 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 var canvas = document.getElementById("myCanvas");
 /** @type {CanvasRenderingContext2D} */
 
-var ctx = canvas.getContext("2d");
-var output = document.getElementById("output");
-document.addEventListener("touchstart", touchHandler);
-document.addEventListener("touchmove", touchHandler);
+var ctx = canvas.getContext("2d"); // initial variables
+
 var mainSquare;
 var myEnemies = [];
 var distances = [295, 265, 235, 205, 175, 145, 115, 85, 55, 25];
 var mainSquareImage = document.getElementById("source");
 var enemyImage = document.getElementById("enemy");
+var buttonImage = document.getElementById("button");
+var myUpBtn;
+var myDownBtn;
+var myLeftBtn;
+var myRightBtn;
+var myMusic;
 
 function startGame() {
-  mainSquare = new component(32, 32, 10, 120, mainSquareImage);
+  mainSquare = new component(32, 32, 240, 180, mainSquareImage);
+  myUpBtn = new component(32, 32, 380, 210, buttonImage);
+  myDownBtn = new component(32, 32, 380, 270, buttonImage);
+  myLeftBtn = new component(32, 32, 350, 240, buttonImage);
+  myRightBtn = new component(32, 32, 410, 240, buttonImage);
+  myMusic = new sound("assets/audio/mainTheme.mp3");
+  myMusic.play();
   myGameArea.start();
 }
+
+var sound =
+/*#__PURE__*/
+function () {
+  function sound(src) {
+    _classCallCheck(this, sound);
+
+    this.sound = document.createElement("audio");
+    this.sound.src = src;
+    this.sound.setAttribute("preload", "auto");
+    this.sound.setAttribute("controls", "none");
+    this.sound.style.display = "none";
+    document.body.appendChild(this.sound);
+  }
+
+  _createClass(sound, [{
+    key: "play",
+    value: function play() {
+      this.sound.play();
+    }
+  }, {
+    key: "stop",
+    value: function stop() {
+      this.sound.pause();
+    }
+  }]);
+
+  return sound;
+}();
 
 var myGameArea = {
   start: function start() {
     this.frameNo = 0;
     this.interval = setInterval(updateGameArea, 20);
-    window.addEventListener('touchmove', function (e) {
-      myGameArea.x = e.touches[0].screenX;
-      myGameArea.y = e.touches[0].screenY;
+    window.addEventListener('mousedown', function (e) {
+      console.log(e.pageX);
+      myGameArea.x = e.pageX;
+      myGameArea.y = e.pageY;
+      e.preventDefault();
+    });
+    window.addEventListener('mouseup', function (e) {
+      myGameArea.x = false;
+      myGameArea.y = false;
+    });
+    window.addEventListener('touchstart', function (e) {
+      myGameArea.x = e.pageX;
+      myGameArea.y = e.pageY;
+      e.preventDefault();
+    });
+    window.addEventListener('touchend', function (e) {
+      myGameArea.x = false;
+      myGameArea.y = false;
     });
   },
   clear: function clear() {
@@ -191,6 +245,21 @@ function () {
 
       return crash;
     }
+  }, {
+    key: "clicked",
+    value: function clicked() {
+      var myleft = this.x;
+      var myright = this.x + this.width;
+      var mytop = this.y;
+      var mybottom = this.y + this.height;
+      var clicked = true;
+
+      if (mybottom < myGameArea.y || mytop > myGameArea.y || myright < myGameArea.x || myleft > myGameArea.x) {
+        clicked = false;
+      }
+
+      return clicked;
+    }
   }]);
 
   return component;
@@ -198,6 +267,25 @@ function () {
 
 function updateGameArea() {
   var x, y;
+
+  if (myGameArea.x && myGameArea.y) {
+    if (myUpBtn.clicked()) {
+      console.log("here");
+      mainSquare.y += -2;
+    }
+
+    if (myDownBtn.clicked()) {
+      mainSquare.y += 2;
+    }
+
+    if (myLeftBtn.clicked()) {
+      mainSquare.x += -2;
+    }
+
+    if (myRightBtn.clicked()) {
+      mainSquare.x += 2;
+    }
+  }
 
   for (i = 0; i < myEnemies.length; i++) {
     if (mainSquare.collision(myEnemies[i])) {
@@ -207,12 +295,6 @@ function updateGameArea() {
   }
 
   myGameArea.clear();
-
-  if (myGameArea.x && myGameArea.y) {
-    mainSquare.x = myGameArea.x;
-    mainSquare.y = myGameArea.y;
-  }
-
   myGameArea.frameNo += 1;
 
   if (myGameArea.frameNo == 1 || everyInterval(50)) {
@@ -226,6 +308,10 @@ function updateGameArea() {
     myEnemies[i].update();
   }
 
+  myUpBtn.update();
+  myDownBtn.update();
+  myLeftBtn.update();
+  myRightBtn.update();
   mainSquare.newPos();
   mainSquare.update();
 }
@@ -233,15 +319,6 @@ function updateGameArea() {
 function everyInterval(n) {
   if (myGameArea.frameNo / n % 1 == 0) return true;
   return false;
-}
-
-function touchHandler(e) {
-  if (e.touches) {
-    mainSquare.x = e.touches[0].pageX - canvas.offsetLeft - mainSquare.width / 2;
-    mainSquare.y = e.touches[0].pageY - canvas.offsetTop - mainSquare.height / 2;
-    output.innerHTML = "Touch: " + " x: " + mainSquare.x + ", y: " + mainSquare.y;
-    e.preventDefault();
-  }
 }
 
 startGame();
@@ -272,7 +349,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57305" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58297" + '/');
 
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);
