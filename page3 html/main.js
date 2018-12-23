@@ -10,7 +10,7 @@ const distances = [295, 265, 235, 205, 175, 145, 115, 85, 55, 25];
 const mainSquareImage = document.getElementById("source");
 const enemyImage = document.getElementById("enemy");
 const buttonImage = document.getElementById("button");
-var buttonUpImage = document.getElementById("enemyUp");
+const buttonUpImage = document.getElementById("enemyUp");
 var myUpBtn;
 var myDownBtn;
 var myLeftBtn;
@@ -161,14 +161,14 @@ function updateGameArea() {
     }
     myGameArea.clear();
     myGameArea.frameNo += 1;
-    if (myGameArea.frameNo == 1 || everyInterval(50)) {
+    if (myGameArea.frameNo == 1 || everyInterval(15)) {
         x = 0;
         y = distances[Math.floor(Math.random() * distances.length)];
         myEnemies.push(new component(50, 25, x, y, enemyImage));
     }
     for (i = 0; i < myEnemies.length; i++)
     {
-        myEnemies[i].x += 1;
+        myEnemies[i].x += 2;
         myEnemies[i].update();
     }
     if (everyInterval(100)) {
