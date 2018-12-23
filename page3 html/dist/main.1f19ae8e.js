@@ -115,236 +115,125 @@ var canvas = document.getElementById("myCanvas");
 /** @type {CanvasRenderingContext2D} */
 
 var ctx = canvas.getContext("2d");
-var spacePressed = false;
-var spaceUp = false;
-var condition = false;
-var cHeight = canvas.clientHeight;
-var cWidth = canvas.clientWidth;
-var squaredx = 1;
-var enemydx = 1;
-var baseImage = document.getElementById("source");
-var time = new Date();
-var currentTime = time.getSeconds();
-var interval = 1;
-/*var timing =
-    [
-        {
-            time: 0,
-            taken: false
-        },
-        {
-            time: 5,
-            taken: false
-        },
-        {
-            time: 10,
-            taken: false
-        },
-        {
-            time: 15,
-            taken: false
-        },
-        {
-            time: 20,
-            taken: false
-        },
-        {
-            time: 25,
-            taken: false
-        },
-        {
-            time: 30,
-            taken: false
-        },
-        {
-            time: 35,
-            taken: false
-        },
-        {
-            time: 40,
-            taken: false
-        },
-        {
-            time: 45,
-            taken: false
-        },
-        {
-            time: 50,
-            taken: false
-        },
-        {
-            time: 55,
-            taken: false
-        },
-    ];
-*/
-
-var timing = [];
-
-for (var p = 0; p < Math.floor(60 / interval); p++) {
-  timing.push({
-    time: 0 + interval * p,
-    taken: false
-  });
-}
-
+var mainSquare;
+var myEnemies = [];
 var distances = [295, 265, 235, 205, 175, 145, 115, 85, 55, 25];
+var mainSquareImage = document.getElementById("source");
+var enemyImage = document.getElementById("enemy");
 
-var hero =
-/*#__PURE__*/
-function () {
-  function hero() {
-    _classCallCheck(this, hero);
+function startGame() {
+  mainSquare = new component(32, 32, 10, 120, mainSquareImage);
+  myGameArea.start();
+}
 
-    this.x = canvas.clientWidth / 2 - 16;
-    this.y = canvas.clientHeight / 2 - 16;
-    this.width = 32;
-    this.height = 32;
-    this.color = "#74b9ff";
+var myGameArea = {
+  start: function start() {
+    this.frameNo = 0;
+    this.interval = setInterval(updateGameArea, 20);
+    window.addEventListener('touchmove', function (e) {
+      myGameArea.x = e.touches[0].screenX;
+      myGameArea.y = e.touches[0].screenY;
+    });
+  },
+  clear: function clear() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  },
+  stop: function stop() {
+    clearInterval(this.interval);
   }
+};
 
-  _createClass(hero, [{
-    key: "draw",
-    value: function draw() {
-      ctx.drawImage(baseImage, this.x, this.y);
-    }
-  }, {
-    key: "update",
-    value: function update() {
-      this.y += squaredx;
-      if (this.y > cHeight - this.height || this.y < 0) squaredx = -squaredx;
-    }
-  }]);
-
-  return hero;
-}();
-
-var enemy =
+var component =
 /*#__PURE__*/
 function () {
-  function enemy(y) {
-    _classCallCheck(this, enemy);
+  function component(width, height, x, y, image) {
+    _classCallCheck(this, component);
 
-    this.x = 0 - 50;
+    this.x = x;
     this.y = y;
-    this.width = 50;
-    this.height = 25;
-    this.color = "red";
+    this.width = width;
+    this.height = height;
+    this.image = image;
+    this.speedX = 0;
+    this.speedY = 0;
   }
 
-  _createClass(enemy, [{
-    key: "draw",
-    value: function draw() {
-      ctx.beginPath();
-      ctx.rect(this.x, this.y, this.width, this.height);
-      ctx.fillStyle = this.color;
-      ctx.fill();
-      ctx.closePath();
-    }
-  }, {
+  _createClass(component, [{
     key: "update",
     value: function update() {
-      this.x += enemydx;
+      ctx.drawImage(this.image, this.x, this.y);
+    }
+  }, {
+    key: "newPos",
+    value: function newPos() {
+      this.x += this.speedX;
+      this.y += this.speedY;
+    }
+  }, {
+    key: "collision",
+    value: function collision(otherobj) {
+      var myleft = this.x;
+      var myright = this.x + this.width;
+      var mytop = this.y;
+      var mybottom = this.y + this.height;
+      var otherleft = otherobj.x;
+      var otherright = otherobj.x + otherobj.width;
+      var othertop = otherobj.y;
+      var otherbottom = otherobj.y + otherobj.height;
+      var crash = true;
+
+      if (mybottom < othertop || mytop > otherbottom || myright < otherleft || myleft > otherright) {
+        crash = false;
+      }
+
+      return crash;
     }
   }]);
 
-  return enemy;
+  return component;
 }();
 
-var square = new hero();
-var enemies = [];
+function updateGameArea() {
+  var x, y;
 
-function distanceFrom(x1, y1, x2, y2) {
-  xDistance = x2 - x1;
-  yDistance = y2 - y1;
-  return Math.sqrt(Math.pow(xDistance, 2) + Math.pow(yDistance, 2));
-}
-
-function timer() {
-  var d = new Date();
-  var timedif = Math.abs(d.getSeconds() - currentTime);
-
-  if (timedif % interval == 0) {
-    for (var i = 0; i < timing.length; i++) {
-      if (timing[i].time === timedif && !timing[i].taken && timedif != 0) {
-        if (timedif == 60 - interval) timing[0].taken = false;
-        timing[i].taken = true;
-        return true;
-      }
-
-      if (timedif == 0 && !timing[0].taken) {
-        timing[0] = true;
-
-        for (var j = 1; j < timing.length; j++) {
-          timing[i].taken = false;
-        }
-
-        return true;
-      }
-    }
-  }
-}
-
-function spawnEnemies() {
-  var random;
-
-  if (timer()) {
-    random = Math.floor(Math.random() * distances.length);
-    var enemy1 = new enemy(distances[random]);
-    enemies.push(enemy1); //}
-  }
-}
-
-function keyDownHandler(e) {
-  if (e.keyCode == 32) {
-    spacePressed = true;
-    spaceUp = false;
-  }
-}
-
-function keyUpHandler(e) {
-  if (e.keyCode == 32) {
-    spacePressed = false;
-    spaceUp = true;
-    squaredx = -squaredx;
-  }
-}
-
-function draw() {
-  ctx.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight);
-
-  if (!condition) {
-    ctx.font = "30px Arial";
-    ctx.fillText("Welcome to my game", cWidth / 2 - 120, cHeight / 2);
-    ctx.fillText("I hope you enjoy it", cWidth / 2 - 120, cHeight / 2 + 30);
-    ctx.fillText(":) :) :) :) :) :)", cWidth / 2 - 120, cHeight / 2 + 60);
-    ctx.fillText("Press space you dummy", cWidth / 2 - 120, cHeight / 2 + 90);
-
-    if (spaceUp) {
-      condition = true;
+  for (i = 0; i < myEnemies.length; i++) {
+    if (mainSquare.collision(myEnemies[i])) {
+      myGameArea.stop();
+      return;
     }
   }
 
-  if (condition) {
-    square.draw();
-    square.update();
-    spawnEnemies();
+  myGameArea.clear();
 
-    for (var i = 0; i < enemies.length; i++) {
-      enemies[i].draw();
-      enemies[i].update();
-
-      if (distanceFrom(square.x, square.y, enemies[i].x, enemies[i].y) < enemies[i].width / 2 + square.width || enemies[i].x > cWidth + enemies[i].width) {
-        enemies.splice(i, 1);
-      }
-    }
+  if (myGameArea.x && myGameArea.y) {
+    mainSquare.x = myGameArea.x;
+    mainSquare.y = myGameArea.y;
   }
+
+  myGameArea.frameNo += 1;
+
+  if (myGameArea.frameNo == 1 || everyInterval(150)) {
+    x = 0;
+    y = distances[Math.floor(Math.random() * distances.length)];
+    myEnemies.push(new component(50, 25, x, y, enemyImage));
+  }
+
+  for (i = 0; i < myEnemies.length; i++) {
+    myEnemies[i].x += 1;
+    myEnemies[i].update();
+  }
+
+  mainSquare.newPos();
+  mainSquare.update();
 }
 
-document.addEventListener("keydown", keyDownHandler, false);
-document.addEventListener("keyup", keyUpHandler, false);
-setInterval(draw, 10);
-},{}],"../../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+function everyInterval(n) {
+  if (myGameArea.frameNo / n % 1 == 0) return true;
+  return false;
+}
+
+startGame();
+},{}],"../../../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -371,7 +260,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60322" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55690" + '/');
 
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);
@@ -513,5 +402,5 @@ function hmrAccept(bundle, id) {
     return hmrAccept(global.parcelRequire, id);
   });
 }
-},{}]},{},["../../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js","main.js"], null)
+},{}]},{},["../../../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js","main.js"], null)
 //# sourceMappingURL=/main.1f19ae8e.map

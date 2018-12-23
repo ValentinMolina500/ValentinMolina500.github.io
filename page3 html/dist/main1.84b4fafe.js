@@ -105,42 +105,135 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   // Override the current require with this new one
   return newRequire;
 })({"main1.js":[function(require,module,exports) {
-var canvas = document.getElementById("myCanvas");
-/** @type {CanvasRenderingContext2D} */
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var ctx = canvas.getContext("2d");
-var cHeight = canvas.clientHeight;
-var cWidth = canvas.clientWidth;
-spaceUp = false;
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
-function keyDownHandler(e) {
-  if (e.keyCode == 32) {
-    spaceUp = false;
-  }
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var mainSquare;
+var myEnemies = [];
+var distances = [295, 265, 235, 205, 175, 145, 115, 85, 55, 25];
+var mainSquareImage = document.getElementById("source");
+var enemyImage = document.getElementById("enemy");
+
+function startGame() {
+  mainSquare = new component(32, 32, 10, 120, mainSquareImage);
+  myGameArea.start();
 }
 
-function keyUpHandler(e) {
-  if (e.keyCode == 32) {
-    spaceUp = true;
+var myGameArea = {
+  canvas: document.createElement("canvas"),
+  start: function start() {
+    this.canvas.width = 480;
+    this.canvas.height = 320;
+    this.context = this.canvas.getContext("2d");
+    document.body.insertBefore(this.canvas, document.body.childNodes[0]);
+    this.frameNo = 0;
+    this.interval = setInterval(updateGameArea, 20);
+    window.addEventListener('touchmove', function (e) {
+      myGameArea.x = e.touches[0].screenX;
+      myGameArea.y = e.touches[0].screenY;
+    });
+  },
+  clear: function clear() {
+    this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+  },
+  stop: function stop() {
+    clearInterval(this.interval);
   }
+};
+
+var component =
+/*#__PURE__*/
+function () {
+  function component(width, height, x, y, baseImage) {
+    _classCallCheck(this, component);
+
+    this.x = x;
+    this.y = y;
+    this.width = width;
+    this.height = height;
+    this.image = baseImage;
+    this.speedX = 0;
+    this.speedY = 0;
+  }
+
+  _createClass(component, [{
+    key: "update",
+    value: function update() {
+      ctx = myGameArea.context;
+      ctx.drawImage(this.image, this.x, this.y);
+    }
+  }, {
+    key: "newPos",
+    value: function newPos() {
+      this.x += this.speedX;
+      this.y += this.speedY;
+    }
+  }, {
+    key: "collision",
+    value: function collision(otherobj) {
+      var myleft = this.x;
+      var myright = this.x + this.width;
+      var mytop = this.y;
+      var mybottom = this.y + this.height;
+      var otherleft = otherobj.x;
+      var otherright = otherobj.x + otherobj.width;
+      var othertop = otherobj.y;
+      var otherbottom = otherobj.y + otherobj.height;
+      var crash = true;
+
+      if (mybottom < othertop || mytop > otherbottom || myright < otherleft || myleft > otherright) {
+        crash = false;
+      }
+
+      return crash;
+    }
+  }]);
+
+  return component;
+}();
+
+function updateGameArea() {
+  var x, y;
+
+  for (i = 0; i < myEnemies.length; i++) {
+    if (mainSquare.collision(myEnemies[i])) {
+      myGameArea.stop();
+      return;
+    }
+  }
+
+  myGameArea.clear();
+
+  if (myGameArea.x && myGameArea.y) {
+    mainSquare.x = myGameArea.x;
+    mainSquare.y = myGameArea.y;
+  }
+
+  myGameArea.frameNo += 1;
+
+  if (myGameArea.frameNo == 1 || everyInterval(150)) {
+    x = 0;
+    y = distances[Math.floor(Math.random() * distances.length)];
+    myEnemies.push(new component(50, 25, x, y));
+  }
+
+  for (i = 0; i < myEnemies.length; i++) {
+    myEnemies[i].x += -1;
+    myEnemies[i].update();
+  }
+
+  mainSquare.newPos();
+  mainSquare.update();
 }
 
-function draw() {
-  ctx.font = "30px Arial";
-  ctx.fillText("Welcome to my game", cWidth / 2 - 120, cHeight / 2);
-  ctx.fillText("I hope you enjoy it", cWidth / 2 - 120, cHeight / 2 + 30);
-  ctx.fillText(":) :) :) :) :) :)", cWidth / 2 - 120, cHeight / 2 + 60);
-  ctx.fillText("Press space you dummy", cWidth / 2 - 120, cHeight / 2 + 90);
-
-  if (spaceUp) {
-    document.getElementById("scene").src = "main.js";
-  }
+function everyInterval(n) {
+  if (myGameArea.frameNo / n % 1 == 0) return true;
+  return false;
 }
-
-document.addEventListener("keydown", keyDownHandler, false);
-document.addEventListener("keyup", keyUpHandler, false);
-setInterval(draw, 10);
-},{}],"../../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{}],"../../../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -167,7 +260,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "54422" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53571" + '/');
 
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);
@@ -309,5 +402,5 @@ function hmrAccept(bundle, id) {
     return hmrAccept(global.parcelRequire, id);
   });
 }
-},{}]},{},["../../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js","main1.js"], null)
+},{}]},{},["../../../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js","main1.js"], null)
 //# sourceMappingURL=/main1.84b4fafe.map
