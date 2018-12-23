@@ -181,7 +181,7 @@ function updateGameArea() {
         myEnemiesUp[i].y += -1;
         myEnemiesUp[i].update();
     }
-    console.log(myEnemiesUp.length);
+    console.log(myEnemies.length);
     myUpBtn.update();
     myDownBtn.update();
     myLeftBtn.update();
