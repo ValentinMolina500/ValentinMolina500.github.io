@@ -1,24 +1,30 @@
-var canvas = document.getElementById("myCanvas");
-/** @type {CanvasRenderingContext2D} */
-var ctx = canvas.getContext("2d");
+var canvas = document.querySelector('canvas');
+var ctx = canvas.getContext('2d');
 
 // initial variables
 var mainSquare;
 var myEnemies = [];
-var myEnemiesUp = [];
+//var myEnemiesUp = [];
+const distancesX = [480, 450, 420, 390, 360, 330, 300, 270, 240, 210, 180, 150,
+    120, 90, 60, 30]
 const distances = [295, 265, 235, 205, 175, 145, 115, 85, 55, 25];
 const mainSquareImage = document.getElementById("source");
 const enemyImage = document.getElementById("enemy");
 const buttonImage = document.getElementById("button");
-const buttonUpImage = document.getElementById("enemyUp");
+const enemyUpImage = document.getElementById("enemyUp");
 var myUpBtn;
 var myDownBtn;
 var myLeftBtn;
 var myRightBtn;
 var myMusic;
+var rightPressed = false;
+var leftPressed = false;
+var upPressed = false;
+var downPressed = false;
 
 function startGame() {
-    mainSquare = new component(32, 32, 240, 180, mainSquareImage);
+    mainSquare = new component(32, 32, canvas.width/2,
+        canvas.height/2, mainSquareImage);
     myUpBtn = new component(32, 32, 380, 210, buttonImage);
     myDownBtn = new component(32, 32, 380, 270, buttonImage);
     myLeftBtn = new component(32, 32, 350, 240, buttonImage);
@@ -46,6 +52,7 @@ class sound {
 }
 var myGameArea = {
     start: function() {
+        this.score = 0;
         this.frameNo = 0;
         this.interval = setInterval(updateGameArea, 20);
         window.addEventListener('mousedown', function (e) {
@@ -74,12 +81,36 @@ var myGameArea = {
             myGameArea.x = e.touches[0].pageX;
             myGameArea.y = e.touches[0].pageY;
         })
+        window.addEventListener("keydown", e => {
+            if(e.keyCode == 68)
+                rightPressed = true;
+            else if(e.keyCode == 65)
+                leftPressed = true;
+            else if(e.keyCode == 87)
+                upPressed = true;
+            else if(e.keyCode == 83)
+                downPressed = true;
+        })
+        window.addEventListener("keyup", e => {
+            if(e.keyCode == 68)
+                rightPressed = false;
+            else if(e.keyCode == 65)
+                leftPressed = false;
+            else if(e.keyCode == 87)
+                upPressed = false;
+            else if(e.keyCode == 83)
+                downPressed = false;
+        })
         },
     clear: function() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         },
     stop: function() {
         clearInterval(this.interval);
+    },
+    scoreUpdate: function() {
+        ctx.font = "30px Comic Sans MS";
+        ctx.fillText("score: " + this.score, 330, 50);
     }
 }
 
@@ -131,6 +162,8 @@ class component {
 
 function updateGameArea() {
     var x, y;
+
+    // canvas on screen button implementation
     if(myGameArea.x && myGameArea.y) {
         if(myUpBtn.clicked()) {
             mainSquare.y += -2;
@@ -145,55 +178,78 @@ function updateGameArea() {
             mainSquare.x += 2;
         }
     }
-    for (i = 0; i < myEnemies.length; i++)
-    {
-        if (mainSquare.collision(myEnemies[i])) {
-            myGameArea.stop();
-            return;
-        }
+
+    // WASD movement implementation
+    if(rightPressed && mainSquare.x + 3 < canvas.width - mainSquare.width) {
+        mainSquare.x += 3;
     }
-    for (i = 0; i < myEnemiesUp.length; i++)
-    {
-        if (mainSquare.collision(myEnemiesUp[i])) {
-            myGameArea.stop();
-            return;
-        }
+    else if(leftPressed && mainSquare.x -3 > -3) {
+        mainSquare.x += -3;
     }
+    else if(upPressed && mainSquare.y - 3 > -3) {
+        mainSquare.y += -3;
+    }
+    else if(downPressed && mainSquare.y + 3 < canvas.height - mainSquare.height + 3) {
+        mainSquare.y += 3;
+    }
+
+    // frame and clear
     myGameArea.clear();
     myGameArea.frameNo += 1;
-    if (myGameArea.frameNo == 1 || everyInterval(15)) {
-        x = 0;
+
+    // spawning horizontal mobs
+    if (myGameArea.frameNo == 1 || everyInterval(30)) {
+        x = canvas.width + 50;
         y = distances[Math.floor(Math.random() * distances.length)];
         myEnemies.push(new component(50, 25, x, y, enemyImage));
     }
-    for (i = 0; i < myEnemies.length; i++)
-    {
-        myEnemies[i].x += 2;
-        myEnemies[i].update();
-    }
-    if (everyInterval(100)) {
-        x = distances[Math.floor(Math.random() * distances.length)];
+
+    // spawning vertical mobs
+    if (everyInterval(30)) {
+        x = distancesX[Math.floor(Math.random() * distancesX.length)];
         y = canvas.height + 50;
-        myEnemiesUp.push(new component(25, 50, x, y, enemyUpImage));
-    }
-    for (i = 0; i < myEnemiesUp.length; i++)
-    {
-        myEnemiesUp[i].y += -1;
-        myEnemiesUp[i].update();
+        myEnemies.push(new component(25, 50, x, y, enemyUpImage));
     }
     console.log(myEnemies.length);
-    myUpBtn.update();
+    // updating score
+    if (everyInterval(45)) {
+        myGameArea.score++;
+    }
+    // updating movement for enemies
+    for (i = 0; i < myEnemies.length; i++)
+    {
+        if(myEnemies[i].x > canvas.width + myEnemies[i].width || (myEnemies[i].y < 0 - myEnemies[i].height && myEnemies[i].x > 0)) {
+            myEnemies.splice(i, 1);
+        }
+        if(myEnemies[i].width == 50) {
+            myEnemies[i].x += -7;
+            myEnemies[i].update();
+        }
+        if(myEnemies[i].width == 25) {
+            myEnemies[i].y += -7    ;
+            myEnemies[i].update();
+        }
+        if (mainSquare.collision(myEnemies[i])) {
+            myGameArea.stop();
+            //return;
+        }
+    }
+
+    // hero and button updates
+    /*myUpBtn.update();
     myDownBtn.update();
     myLeftBtn.update();
-    myRightBtn.update();
+    myRightBtn.update();*/
     mainSquare.newPos();
     mainSquare.update();
+    myGameArea.scoreUpdate();
 }
 
+// logic
 function everyInterval(n) {
     if((myGameArea.frameNo / n ) % 1 == 0)
         return true;
     return false;
 }
 
-startGame();
+//startGame();
