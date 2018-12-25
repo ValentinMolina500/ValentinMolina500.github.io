@@ -286,7 +286,7 @@ function updateGameArea() {
                     modalText.innerHTML = "You lose! Your score was " + myGameArea.score +
                     ". Looks like you need some practice. Click outside the modal to try again.";
                     emotion = "sad";
-                    giphyAPI = "http://api.giphy.com/v1/gifs/random?tag=" +
+                    giphyAPI = "https://api.giphy.com/v1/gifs/random?tag=" +
                         emotion + "&api_key=FS7DZSLxVLnAPoHAIzv2sr3p9eo8HmOM";
                     fetch(giphyAPI)
                     .then(response => response.json())
@@ -300,7 +300,7 @@ function updateGameArea() {
                     modalText.innerHTML = "You lose! Your score was " + myGameArea.score +
                 ". Not bad. Click outside the modal to try again.";
                     emotion = "impressed";
-                    giphyAPI = "http://api.giphy.com/v1/gifs/random?tag=" +
+                    giphyAPI = "https://api.giphy.com/v1/gifs/random?tag=" +
                         emotion + "&api_key=FS7DZSLxVLnAPoHAIzv2sr3p9eo8HmOM";
                     fetch(giphyAPI)
                     .then(response => response.json())
