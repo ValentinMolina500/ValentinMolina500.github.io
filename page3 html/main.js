@@ -15,7 +15,7 @@ var myMusic = document.querySelector('audio');
 var myMusic2 = document.getElementById('myAudio2');
 myMusic.volume = "0.7";
 myMusic2.volume = "0.7";
-setTimeout(() => myMusic.play(), 500);
+setTimeout(() => myMusic.play(), 700);
 
 
 // initial variables
