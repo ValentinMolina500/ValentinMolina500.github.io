@@ -111,33 +111,40 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-var canvas = document.getElementById("myCanvas");
-/** @type {CanvasRenderingContext2D} */
-
-var ctx = canvas.getContext("2d"); // initial variables
+var nodes = document.querySelectorAll("canvas");
+var canvas = nodes[0];
+var ctx = canvas.getContext('2d');
+var secondCanvas = nodes[nodes.length - 1];
+var ctx2 = secondCanvas.getContext('2d');
+ctx2.font = "30px Comic Sans MS"; // initial variables
 
 var mainSquare;
-var myEnemies = [];
-var myEnemiesUp = [];
+var myEnemies = []; //var myEnemiesUp = [];
+
+var distancesX = [480, 450, 420, 390, 360, 330, 300, 270, 240, 210, 180, 150, 120, 90, 60, 30];
 var distances = [295, 265, 235, 205, 175, 145, 115, 85, 55, 25];
+var sqSpeed = 0; // images
+
 var mainSquareImage = document.getElementById("source");
 var enemyImage = document.getElementById("enemy");
 var buttonImage = document.getElementById("button");
-var buttonUpImage = document.getElementById("enemyUp");
+var enemyUpImage = document.getElementById("enemyUp");
+var speedUpImage = document.getElementById("speedUp");
 var myUpBtn;
 var myDownBtn;
 var myLeftBtn;
 var myRightBtn;
-var myMusic;
+var rightPressed = false;
+var leftPressed = false;
+var upPressed = false;
+var downPressed = false;
 
 function startGame() {
-  mainSquare = new component(32, 32, 240, 180, mainSquareImage);
+  mainSquare = new component(32, 32, canvas.width / 2, canvas.height / 2, mainSquareImage);
   myUpBtn = new component(32, 32, 380, 210, buttonImage);
   myDownBtn = new component(32, 32, 380, 270, buttonImage);
   myLeftBtn = new component(32, 32, 350, 240, buttonImage);
-  myRightBtn = new component(32, 32, 410, 240, buttonImage); //myMusic = new sound("assets/audio/mainTheme.mp3");
-  //myMusic.play();
-
+  myRightBtn = new component(32, 32, 410, 240, buttonImage);
   myGameArea.start();
 }
 
@@ -172,6 +179,7 @@ function () {
 
 var myGameArea = {
   start: function start() {
+    this.score = 0;
     this.frameNo = 0;
     this.interval = setInterval(updateGameArea, 20);
     window.addEventListener('mousedown', function (e) {
@@ -200,12 +208,23 @@ var myGameArea = {
       myGameArea.x = e.touches[0].pageX;
       myGameArea.y = e.touches[0].pageY;
     });
+    window.addEventListener("keydown", function (e) {
+      if (e.keyCode == 68) rightPressed = true;else if (e.keyCode == 65) leftPressed = true;else if (e.keyCode == 87) upPressed = true;else if (e.keyCode == 83) downPressed = true;
+    });
+    window.addEventListener("keyup", function (e) {
+      if (e.keyCode == 68) rightPressed = false;else if (e.keyCode == 65) leftPressed = false;else if (e.keyCode == 87) upPressed = false;else if (e.keyCode == 83) downPressed = false;
+    });
   },
   clear: function clear() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx2.clearRect(0, 0, canvas.width, canvas.height);
   },
   stop: function stop() {
     clearInterval(this.interval);
+  },
+  scoreUpdate: function scoreUpdate() {
+    ctx.font = "30px Comic Sans MS";
+    ctx.fillText("score: " + this.score, 330, 50);
   }
 };
 
@@ -275,7 +294,7 @@ function () {
 }();
 
 function updateGameArea() {
-  var x, y;
+  var x, y; // canvas on screen button implementation
 
   if (myGameArea.x && myGameArea.y) {
     if (myUpBtn.clicked()) {
@@ -293,62 +312,96 @@ function updateGameArea() {
     if (myRightBtn.clicked()) {
       mainSquare.x += 2;
     }
-  }
+  } // WASD movement implementation
 
-  for (i = 0; i < myEnemies.length; i++) {
-    if (mainSquare.collision(myEnemies[i])) {
-      myGameArea.stop();
-      return;
-    }
-  }
 
-  for (i = 0; i < myEnemiesUp.length; i++) {
-    if (mainSquare.collision(myEnemiesUp[i])) {
-      myGameArea.stop();
-      return;
-    }
-  }
+  if (rightPressed && mainSquare.x + 3 < canvas.width - mainSquare.width) {
+    mainSquare.x += 3 + sqSpeed;
+  } else if (leftPressed && mainSquare.x - 3 > -3) {
+    mainSquare.x += -3 - sqSpeed;
+  } else if (upPressed && mainSquare.y - 3 > -3) {
+    mainSquare.y += -3 - sqSpeed;
+  } else if (downPressed && mainSquare.y + 3 < canvas.height - mainSquare.height + 3) {
+    mainSquare.y += 3 + sqSpeed;
+  } // frame and clear
+
 
   myGameArea.clear();
-  myGameArea.frameNo += 1;
+  myGameArea.frameNo += 1; // spawning horizontal mobs
 
-  if (myGameArea.frameNo == 1 || everyInterval(50)) {
-    x = 0;
+  if (myGameArea.frameNo == 1 || everyInterval(30)) {
+    x = canvas.width + 50;
     y = distances[Math.floor(Math.random() * distances.length)];
     myEnemies.push(new component(50, 25, x, y, enemyImage));
-  }
+  } // spawning vertical mobs
+
+
+  if (everyInterval(30)) {
+    x = distancesX[Math.floor(Math.random() * distancesX.length)];
+    y = canvas.height + 50;
+    myEnemies.push(new component(25, 50, x, y, enemyUpImage));
+  } // spawing powerups
+
+
+  if (everyInterval(550)) {
+    x = canvas.width + 50;
+    y = distances[Math.floor(Math.random() * distances.length)];
+    myEnemies.push(new component(16, 16, x, y, speedUpImage));
+  } // updating score
+
+
+  if (everyInterval(45)) {
+    myGameArea.score++;
+  } // updating movement for enemies
+
 
   for (i = 0; i < myEnemies.length; i++) {
-    myEnemies[i].x += 1;
-    myEnemies[i].update();
-  }
+    if (myEnemies[i].x > canvas.width + 50 || myEnemies[i].y < 0 - myEnemies[i].height && myEnemies[i].x > 0) {
+      myEnemies.splice(i, 1);
+    }
 
-  if (everyInterval(100)) {
-    x = distances[Math.floor(Math.random() * distances.length)];
-    y = canvas.height + 50;
-    myEnemiesUp.push(new component(25, 50, x, y, enemyUpImage));
-  }
+    if (mainSquare.collision(myEnemies[i])) {
+      if (myEnemies[i].width == 16) {
+        if (sqSpeed < 2) {
+          sqSpeed++;
+        }
 
-  for (i = 0; i < myEnemiesUp.length; i++) {
-    myEnemiesUp[i].y += -1;
-    myEnemiesUp[i].update();
-  }
+        myEnemies.splice(i, 1);
+      } else {
+        myGameArea.stop();
+      }
+    }
 
-  console.log(myEnemies.length);
-  myUpBtn.update();
+    if (myEnemies[i].width == 50 || myEnemies[i].width == 16) {
+      myEnemies[i].x += -3;
+      myEnemies[i].update();
+    }
+
+    if (myEnemies[i].width == 25) {
+      myEnemies[i].y += -3;
+      myEnemies[i].update();
+    }
+  } // hero and button updates
+
+  /*myUpBtn.update();
   myDownBtn.update();
   myLeftBtn.update();
-  myRightBtn.update();
+  myRightBtn.update();*/
+
+
+  ctx2.fillText("Speed: " + (sqSpeed + 3) + "/5", 0, secondCanvas.height / 2);
   mainSquare.newPos();
   mainSquare.update();
-}
+  myGameArea.scoreUpdate();
+} // logic
+
 
 function everyInterval(n) {
   if (myGameArea.frameNo / n % 1 == 0) return true;
   return false;
 }
 
-startGame();
+window.onload = startGame();
 },{}],"../../../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -376,7 +429,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51159" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58907" + '/');
 
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);
