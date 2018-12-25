@@ -15,13 +15,14 @@ var myMusic = document.querySelector('audio');
 var myMusic2 = document.getElementById('myAudio2');
 myMusic.volume = "0.7";
 myMusic2.volume = "0.7";
+setTimeout(() => myMusic.play(), 500);
 
 
 // initial variables
 var mainSquare;
 var myEnemies = [];
 //var myEnemiesUp = [];
-const distancesX = [46, 92, 138, 184, 230, 276, 322, 414]; //480
+const distancesX = [0, 46, 92, 138, 184, 230, 276, 322, 414]; //480
 const distances =  [0, 46, 92, 138, 184, 230, 276];//y 320
 var sqSpeed = 0;
 var timeSince = 0;
@@ -169,7 +170,6 @@ class component {
 }
 
 function updateGameArea() {
-    myMusic.addEventListener("canplay", myMusic.play());
     var x, y;
 
     // canvas on screen button implementation
@@ -281,7 +281,7 @@ function updateGameArea() {
                         modal.style.display = "none";
                         window.location = location;
                 }
-                if(myGameArea.score < 49) {
+                if(myGameArea.score < 50) {
                     modalText.innerHTML = "You lose! Your score was " + myGameArea.score +
                     ". Looks like you need some practice. Click outside the modal to try again.";
                     emotion = "sad";
@@ -351,12 +351,15 @@ function updateGameArea() {
         ctx2.fillText("Invincible!", 180, secondCanvas.height/2);
         ctx2.fillStyle = "black";
     }
-    if(myGameArea.score >= 50) {
-        myMusic.pause();
-        myMusic2.play();
+    if(myGameArea.score >= 50 && myGameArea.score < 100) {
         ctx2.fillText("Wow, you're good", 340, secondCanvas.height/2);
     }
+    if(myGameArea.score >= 100){
+        ctx2.fillText("Amazing!", 340, secondCanvas.height/2);
+    }
     if(myGameArea.frameNo == 2250) {
+        myMusic.pause();
+        myMusic2.play();
         spawnDiff = 20;
         mobSpeed = 1;
     }
