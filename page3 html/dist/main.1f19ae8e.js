@@ -111,25 +111,54 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
+// DOM variables
 var nodes = document.querySelectorAll("canvas");
 var canvas = nodes[0];
 var ctx = canvas.getContext('2d');
 var secondCanvas = nodes[nodes.length - 1];
 var ctx2 = secondCanvas.getContext('2d');
-ctx2.font = "30px Comic Sans MS"; // initial variables
+ctx2.font = "30px Comic Sans MS";
+var modal = document.getElementById('myModal');
+var span = document.getElementsByClassName("close")[0];
+var modalText = document.querySelector("p");
+var modalImage = document.querySelector('img');
+var giphyAPI = "http://api.giphy.com/v1/gifs/search?q=ryan+gosling&api_key=FS7DZSLxVLnAPoHAIzv2sr3p9eo8HmOM&limit=5";
+var result;
+fetch(giphyAPI).then(function (response) {
+  return response.json();
+}).then(function (json) {
+  console.log(json);
+  result = json;
+}).catch(function (err) {
+  return console.log(err);
+}); // modal :D
+
+span.onclick = function () {
+  modal.style.display = "none";
+  window.location = location;
+};
+
+window.onclick = function (e) {
+  if (e.target == modal) modal.style.display = "none";
+  window.location = location;
+}; // initial variables
+
 
 var mainSquare;
 var myEnemies = []; //var myEnemiesUp = [];
 
 var distancesX = [480, 450, 420, 390, 360, 330, 300, 270, 240, 210, 180, 150, 120, 90, 60, 30];
 var distances = [295, 265, 235, 205, 175, 145, 115, 85, 55, 25];
-var sqSpeed = 0; // images
+var sqSpeed = 0;
+var timeSince = 0; // images
 
 var mainSquareImage = document.getElementById("source");
 var enemyImage = document.getElementById("enemy");
 var buttonImage = document.getElementById("button");
 var enemyUpImage = document.getElementById("enemyUp");
 var speedUpImage = document.getElementById("speedUp");
+var speedDownImage = document.getElementById("speedDown");
+var invincibleImage = document.getElementById("invincible");
 var myUpBtn;
 var myDownBtn;
 var myLeftBtn;
@@ -217,7 +246,7 @@ var myGameArea = {
   },
   clear: function clear() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx2.clearRect(0, 0, canvas.width, canvas.height);
+    ctx2.clearRect(0, 0, secondCanvas.width, secondCanvas.height);
   },
   stop: function stop() {
     clearInterval(this.interval);
@@ -241,6 +270,7 @@ function () {
     this.image = image;
     this.speedX = 0;
     this.speedY = 0;
+    this.invincible = false;
   }
 
   _createClass(component, [{
@@ -315,13 +345,13 @@ function updateGameArea() {
   } // WASD movement implementation
 
 
-  if (rightPressed && mainSquare.x + 3 < canvas.width - mainSquare.width) {
+  if (rightPressed && mainSquare.x + 3 + sqSpeed < canvas.width - mainSquare.width) {
     mainSquare.x += 3 + sqSpeed;
-  } else if (leftPressed && mainSquare.x - 3 > -3) {
+  } else if (leftPressed && mainSquare.x - 3 - sqSpeed > -3) {
     mainSquare.x += -3 - sqSpeed;
-  } else if (upPressed && mainSquare.y - 3 > -3) {
+  } else if (upPressed && mainSquare.y - 3 - sqSpeed > -3) {
     mainSquare.y += -3 - sqSpeed;
-  } else if (downPressed && mainSquare.y + 3 < canvas.height - mainSquare.height + 3) {
+  } else if (downPressed && mainSquare.y + 3 + sqSpeed < canvas.height - mainSquare.height + 3) {
     mainSquare.y += 3 + sqSpeed;
   } // frame and clear
 
@@ -347,6 +377,18 @@ function updateGameArea() {
     x = canvas.width + 50;
     y = distances[Math.floor(Math.random() * distances.length)];
     myEnemies.push(new component(16, 16, x, y, speedUpImage));
+  }
+
+  if (everyInterval(750)) {
+    x = canvas.width + 50;
+    y = distances[Math.floor(Math.random() * distances.length)];
+    myEnemies.push(new component(16, 16, x, y, speedDownImage));
+  }
+
+  if (everyInterval(1050) && !mainSquare.invincible) {
+    x = canvas.width + 50;
+    y = distances[Math.floor(Math.random() * distances.length)];
+    myEnemies.push(new component(16, 16, x, y, invincibleImage));
   } // updating score
 
 
@@ -361,14 +403,47 @@ function updateGameArea() {
     }
 
     if (mainSquare.collision(myEnemies[i])) {
-      if (myEnemies[i].width == 16) {
+      if (myEnemies[i].image == speedUpImage) {
         if (sqSpeed < 2) {
           sqSpeed++;
         }
 
         myEnemies.splice(i, 1);
-      } else {
+      } else if (myEnemies[i].image == speedDownImage) {
+        if (sqSpeed > -2) {
+          sqSpeed--;
+        }
+
+        myEnemies.splice(i, 1);
+      } else if (myEnemies[i].image == invincibleImage) {
+        mainSquare.invincible = true;
+        timeSince = myGameArea.frameNo;
+        myEnemies.splice(i, 1);
+      } else if (!mainSquare.invincible) {
         myGameArea.stop();
+        modal.style.display = "block";
+
+        if (myGameArea.score < 49) {
+          modalText.innerHTML = "You lose! Your score was " + myGameArea.score + ". Looks like you need some practice. Click outside the modal to try again.";
+        }
+
+        if (myGameArea.score >= 50 && myGameArea.score < 99) {
+          modalText.innerHTML = "You lose! Your score was " + myGameArea.score + ". Not bad. Click outside the modal to try again.";
+        }
+
+        if (myGameArea.score >= 100 && myGameArea.score < 150) {
+          modalText.innerHTML = "You lose! Your score was " + myGameArea.score + ". Wow, you're pretty good at this! Click outside the modal to try again.";
+        }
+
+        if (myGameArea.score >= 150 && myGameArea.score < 199) {
+          modalText.innerHTML = "You lose! Your score was " + myGameArea.score + ". Amazing, you're parents must be proud! Click outside the modal to try again.";
+        }
+
+        if (myGameArea.score > 200) {
+          modalText.innerHTML = "You lose! Your score was " + myGameArea.score + ". You are the Square Game Master! Click outside the modal to try again.";
+        }
+
+        modalImage.src = result.data[0].url;
       }
     }
 
@@ -389,7 +464,23 @@ function updateGameArea() {
   myRightBtn.update();*/
 
 
+  if (myGameArea.frameNo > timeSince + 300) {
+    mainSquare.invincible = false;
+  } // second canvas drawings
+
+
   ctx2.fillText("Speed: " + (sqSpeed + 3) + "/5", 0, secondCanvas.height / 2);
+
+  if (mainSquare.invincible) {
+    ctx2.fillStyle = "yellow";
+    ctx2.fillText("Invincible!", 180, secondCanvas.height / 2);
+    ctx2.fillStyle = "black";
+  }
+
+  if (myGameArea.score >= 50 && myGameArea.score < 99) {
+    ctx2.fillText("Wow, you're good", 340, secondCanvas.height / 2);
+  }
+
   mainSquare.newPos();
   mainSquare.update();
   myGameArea.scoreUpdate();
@@ -429,7 +520,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58907" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60354" + '/');
 
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);

@@ -5,21 +5,13 @@ var ctx = canvas.getContext('2d');
 var secondCanvas = nodes[nodes.length - 1];
 var ctx2 = secondCanvas.getContext('2d');
 ctx2.font = "30px Comic Sans MS"
+
+// modal :D
 var modal = document.getElementById('myModal');
 var span = document.getElementsByClassName("close")[0];
 var modalText = document.querySelector("p");
-console.log(modalText);
+var modalImage = document.querySelector('img');
 
-// modal :D
-span.onclick = () => {
-    modal.style.display = "none";
-    window.location = location;
-}
-window.onclick = (e) => {
-    if(e.target == modal)
-        modal.style.display = "none";
-        window.location = location;
-}
 
 // initial variables
 var mainSquare;
@@ -286,13 +278,44 @@ function updateGameArea() {
             else if(!mainSquare.invincible){
                 myGameArea.stop();
                 modal.style.display = "block";
+                let emotion;
+                let giphyAPI;
+                span.onclick = () => {
+                    modal.style.display = "none";
+                    window.location = location;
+                }
+                window.onclick = (e) => {
+                    if(e.target == modal)
+                        modal.style.display = "none";
+                        window.location = location;
+                }
                 if(myGameArea.score < 49) {
                     modalText.innerHTML = "You lose! Your score was " + myGameArea.score +
                     ". Looks like you need some practice. Click outside the modal to try again.";
+                    emotion = "sad";
+                    giphyAPI = "http://api.giphy.com/v1/gifs/random?tag=" +
+                        emotion + "&api_key=FS7DZSLxVLnAPoHAIzv2sr3p9eo8HmOM";
+                    fetch(giphyAPI)
+                    .then(response => response.json())
+                    .then(json => {
+                        console.log(json);
+                        modalImage.src = json.data.images['downsized'].url;
+                    })
+                    .catch(err => console.log(err));
                     }
                 if(myGameArea.score >= 50 && myGameArea.score < 99) {
                     modalText.innerHTML = "You lose! Your score was " + myGameArea.score +
                 ". Not bad. Click outside the modal to try again.";
+                    emotion = "not+bad";
+                    giphyAPI = "http://api.giphy.com/v1/gifs/random?tag=" +
+                        emotion + "&api_key=FS7DZSLxVLnAPoHAIzv2sr3p9eo8HmOM";
+                    fetch(giphyAPI)
+                    .then(response => response.json())
+                    .then(json => {
+                        console.log(json);
+                        modalImage.src = json.data.images['downsized'].url;
+                    })
+                    .catch(err => console.log(err));
                 }
                 if(myGameArea.score >= 100 && myGameArea.score < 150) {
                     modalText.innerHTML = "You lose! Your score was " + myGameArea.score +
@@ -306,6 +329,7 @@ function updateGameArea() {
                     modalText.innerHTML = "You lose! Your score was " + myGameArea.score +
                     ". You are the Square Game Master! Click outside the modal to try again.";
                     }
+                //modalImage.src = result.data.images['downsized'].url;
             }
         }
         if(myEnemies[i].width == 50 || myEnemies[i].width == 16) {
