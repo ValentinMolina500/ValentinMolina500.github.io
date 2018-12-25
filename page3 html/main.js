@@ -1,9 +1,26 @@
+// DOM variables
 var nodes = document.querySelectorAll("canvas");
 var canvas = nodes[0];
 var ctx = canvas.getContext('2d');
 var secondCanvas = nodes[nodes.length - 1];
 var ctx2 = secondCanvas.getContext('2d');
 ctx2.font = "30px Comic Sans MS"
+var modal = document.getElementById('myModal');
+var span = document.getElementsByClassName("close")[0];
+var modalText = document.querySelector("p");
+console.log(modalText);
+
+// modal :D
+span.onclick = () => {
+    modal.style.display = "none";
+    window.location = location;
+}
+window.onclick = (e) => {
+    if(e.target == modal)
+        modal.style.display = "none";
+        window.location = location;
+}
+
 // initial variables
 var mainSquare;
 var myEnemies = [];
@@ -12,6 +29,7 @@ const distancesX = [480, 450, 420, 390, 360, 330, 300, 270, 240, 210, 180, 150,
     120, 90, 60, 30]
 const distances = [295, 265, 235, 205, 175, 145, 115, 85, 55, 25];
 var sqSpeed = 0;
+var timeSince = 0;
 
 // images
 const mainSquareImage = document.getElementById("source");
@@ -19,6 +37,8 @@ const enemyImage = document.getElementById("enemy");
 const buttonImage = document.getElementById("button");
 const enemyUpImage = document.getElementById("enemyUp");
 const speedUpImage = document.getElementById("speedUp");
+const speedDownImage = document.getElementById("speedDown");
+const invincibleImage = document.getElementById("invincible");
 
 var myUpBtn;
 var myDownBtn;
@@ -109,7 +129,7 @@ var myGameArea = {
         },
     clear: function() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx2.clearRect(0, 0, canvas.width, canvas.height);
+        ctx2.clearRect(0, 0, secondCanvas.width, secondCanvas.height);
         },
     stop: function() {
         clearInterval(this.interval);
@@ -129,6 +149,7 @@ class component {
         this.image = image;
         this.speedX = 0;
         this.speedY = 0;
+        this.invincible = false;
     }
     update() {
         ctx.drawImage(this.image, this.x, this.y);
@@ -168,7 +189,7 @@ class component {
 
 function updateGameArea() {
     var x, y;
-    
+
     // canvas on screen button implementation
     if(myGameArea.x && myGameArea.y) {
         if(myUpBtn.clicked()) {
@@ -186,16 +207,16 @@ function updateGameArea() {
     }
 
     // WASD movement implementation
-    if(rightPressed && mainSquare.x + 3 < canvas.width - mainSquare.width) {
+    if(rightPressed && mainSquare.x + 3 + sqSpeed < canvas.width - mainSquare.width) {
         mainSquare.x += 3 + sqSpeed;
     }
-    else if(leftPressed && mainSquare.x -3 > -3) {
+    else if(leftPressed && mainSquare.x -3 - sqSpeed > -3) {
         mainSquare.x += -3 - sqSpeed;
     }
-    else if(upPressed && mainSquare.y - 3 > -3) {
+    else if(upPressed && mainSquare.y - 3 - sqSpeed > -3) {
         mainSquare.y += -3 - sqSpeed;
     }
-    else if(downPressed && mainSquare.y + 3 < canvas.height - mainSquare.height + 3) {
+    else if(downPressed && mainSquare.y + 3 + sqSpeed< canvas.height - mainSquare.height + 3) {
         mainSquare.y += 3 + sqSpeed;
     }
 
@@ -222,6 +243,17 @@ function updateGameArea() {
         y = distances[Math.floor(Math.random() * distances.length)];
         myEnemies.push(new component(16, 16, x, y, speedUpImage));
     }
+    if(everyInterval(750)) {
+        x = canvas.width + 50;
+        y = distances[Math.floor(Math.random() * distances.length)];
+        myEnemies.push(new component(16, 16, x, y, speedDownImage));
+    }
+    if(everyInterval(1050) && !mainSquare.invincible ) {
+        x = canvas.width + 50;
+        y = distances[Math.floor(Math.random() * distances.length)];
+        myEnemies.push(new component(16, 16, x, y, invincibleImage));
+    }
+
     // updating score
     if (everyInterval(45)) {
         myGameArea.score++;
@@ -234,14 +266,46 @@ function updateGameArea() {
             myEnemies.splice(i, 1);
         }
         if (mainSquare.collision(myEnemies[i])) {
-            if(myEnemies[i].width == 16) {
+            if(myEnemies[i].image == speedUpImage) {
                 if(sqSpeed < 2) {
-                sqSpeed++;
+                    sqSpeed++;
                 }
                 myEnemies.splice(i, 1);
             }
-            else {
-            myGameArea.stop();
+            else if(myEnemies[i].image == speedDownImage) {
+                if(sqSpeed > -2) {
+                    sqSpeed--;
+                }
+                myEnemies.splice(i, 1);
+            }
+            else if(myEnemies[i].image == invincibleImage) {
+                mainSquare.invincible = true;
+                timeSince = myGameArea.frameNo;
+                myEnemies.splice(i, 1);
+            }
+            else if(!mainSquare.invincible){
+                myGameArea.stop();
+                modal.style.display = "block";
+                if(myGameArea.score < 49) {
+                    modalText.innerHTML = "You lose! Your score was " + myGameArea.score +
+                    ". Looks like you need some practice. Click outside the modal to try again.";
+                    }
+                if(myGameArea.score >= 50 && myGameArea.score < 99) {
+                    modalText.innerHTML = "You lose! Your score was " + myGameArea.score +
+                ". Not bad. Click outside the modal to try again.";
+                }
+                if(myGameArea.score >= 100 && myGameArea.score < 150) {
+                    modalText.innerHTML = "You lose! Your score was " + myGameArea.score +
+                    ". Wow, you're pretty good at this! Click outside the modal to try again.";
+                    }
+                if(myGameArea.score >= 150 && myGameArea.score < 199) {
+                    modalText.innerHTML = "You lose! Your score was " + myGameArea.score +
+                    ". Amazing, you're parents must be proud! Click outside the modal to try again.";
+                    }
+                if(myGameArea.score > 200) {
+                    modalText.innerHTML = "You lose! Your score was " + myGameArea.score +
+                    ". You are the Square Game Master! Click outside the modal to try again.";
+                    }
             }
         }
         if(myEnemies[i].width == 50 || myEnemies[i].width == 16) {
@@ -259,7 +323,22 @@ function updateGameArea() {
     myDownBtn.update();
     myLeftBtn.update();
     myRightBtn.update();*/
+    if(myGameArea.frameNo > timeSince + 300)
+    {
+        mainSquare.invincible = false;
+    }
+
+    // second canvas drawings
     ctx2.fillText("Speed: " +(sqSpeed + 3) + "/5", 0, secondCanvas.height/2);
+    if(mainSquare.invincible) {
+        ctx2.fillStyle = "yellow";
+        ctx2.fillText("Invincible!", 180, secondCanvas.height/2);
+        ctx2.fillStyle = "black";
+    }
+    if(myGameArea.score >= 50 && myGameArea.score < 99) {
+        ctx2.fillText("Wow, you're good", 340, secondCanvas.height/2);
+    }
+
     mainSquare.newPos();
     mainSquare.update();
     myGameArea.scoreUpdate();

@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Page Title</title>
+    <title>Square Game</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,
         user-scalable=no">
     <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
@@ -11,12 +11,24 @@
     integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 </head>
 <body id="main">
-    <canvas width="480" height="320"></canvas>
-    <canvas id="secondCanvas" width = "480" height="75"></canvas>
+        <div id="myModal" class="modal">
+                <!-- Modal content -->
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <p id="modalText"></p>
+                </div>
+            </div>
+
+    <canvas width="480" height="320"></canvas><br>
+
+    <canvas id="secondCanvas" width = "600" height="75"></canvas>
     <h2 id="text">Hello! Welcome to my Game.</h2>
     <p>Use WASD to move the square. Try not to get hit.<br>
+        <img src="assets/img/redSquare.png"> kills you.<br>
         <img src="assets/img/speedUp.png"> increases your speed.<br>
-        <img src="assets/img/redSquare.png"> kills you.<br><br>
+        <img src="assets/img/speedDownImage.png"> lowers your speed.<br>
+        <img src="assets/img/invincibleImage.png"> makes you invincible for
+            a short time.<br><br>
         <i>Programming: Valentin</i><br><i>Art: Adi</i>
     </p>
     <img id="source" src="assets/img/blueSquare.png" hidden>
@@ -24,6 +36,8 @@
     <img id="button" src="assets/img/button.png" hidden>
     <img id="enemyUp" src="assets/img/redSquareUp.png" hidden>
     <img id="speedUp" src="assets/img/speedUp.png" hidden>
+    <img id="speedDown" src="assets/img/speedDownImage.png" hidden>
+    <img id="invincible" src="assets/img/invincibleImage.png" hidden>
     <script type="text/javascript" src="main.js"></script>
 </body>
 </html>
