@@ -11,6 +11,10 @@ var modal = document.getElementById('myModal');
 var span = document.getElementsByClassName("close")[0];
 var modalText = document.querySelector("p");
 var modalImage = document.querySelector('img');
+var myMusic = document.querySelector('audio');
+var myMusic2 = document.getElementById('myAudio2');
+myMusic.volume = "0.7";
+myMusic2.volume = "0.7";
 
 
 // initial variables
@@ -40,6 +44,8 @@ var rightPressed = false;
 var leftPressed = false;
 var upPressed = false;
 var downPressed = false;
+var spawnDiff = 0;
+var mobSpeed = 0;
 
 function startGame() {
     mainSquare = new component(32, 32, canvas.width/2,
@@ -51,22 +57,6 @@ function startGame() {
     myGameArea.start();
 }
 
-class sound {
-    constructor(src) {
-        this.sound = document.createElement("audio");
-        this.sound.src = src;
-        this.sound.setAttribute("preload", "auto");
-        this.sound.setAttribute("controls", "none");
-        this.sound.style.display = "none";
-        document.body.appendChild(this.sound);
-    }
-    play() {
-        this.sound.play();
-    }
-    stop() {
-        this.sound.pause();
-    }
-}
 var myGameArea = {
     start: function() {
         this.score = 0;
@@ -180,6 +170,7 @@ class component {
 }
 
 function updateGameArea() {
+    myMusic.addEventListener("canplay", myMusic.play());
     var x, y;
 
     // canvas on screen button implementation
@@ -217,14 +208,14 @@ function updateGameArea() {
     myGameArea.frameNo += 1;
 
     // spawning horizontal mobs
-    if (myGameArea.frameNo == 1 || everyInterval(30)) {
+    if (myGameArea.frameNo == 1 || everyInterval(50 - spawnDiff)) {
         x = canvas.width + 50;
         y = distances[Math.floor(Math.random() * distances.length)];
         myEnemies.push(new component(50, 25, x, y, enemyImage));
     }
 
     // spawning vertical mobs
-    if (everyInterval(30)) {
+    if (everyInterval(50 - spawnDiff)) {
         x = distancesX[Math.floor(Math.random() * distancesX.length)];
         y = canvas.height + 50;
         myEnemies.push(new component(25, 50, x, y, enemyUpImage));
@@ -277,6 +268,8 @@ function updateGameArea() {
             }
             else if(!mainSquare.invincible){
                 myGameArea.stop();
+                myMusic.pause();
+                myMusic2.pause();
                 modal.style.display = "block";
                 let emotion;
                 let giphyAPI;
@@ -306,7 +299,7 @@ function updateGameArea() {
                 if(myGameArea.score >= 50 && myGameArea.score < 99) {
                     modalText.innerHTML = "You lose! Your score was " + myGameArea.score +
                 ". Not bad. Click outside the modal to try again.";
-                    emotion = "not+bad";
+                    emotion = "impressed";
                     giphyAPI = "http://api.giphy.com/v1/gifs/random?tag=" +
                         emotion + "&api_key=FS7DZSLxVLnAPoHAIzv2sr3p9eo8HmOM";
                     fetch(giphyAPI)
@@ -333,11 +326,11 @@ function updateGameArea() {
             }
         }
         if(myEnemies[i].width == 50 || myEnemies[i].width == 16) {
-            myEnemies[i].x += -3;
+            myEnemies[i].x += -2 - mobSpeed;
             myEnemies[i].update();
         }
         if(myEnemies[i].width == 25) {
-            myEnemies[i].y += -3;
+            myEnemies[i].y += -2 - mobSpeed;
             myEnemies[i].update();
         }
     }
@@ -359,8 +352,14 @@ function updateGameArea() {
         ctx2.fillText("Invincible!", 180, secondCanvas.height/2);
         ctx2.fillStyle = "black";
     }
-    if(myGameArea.score >= 50 && myGameArea.score < 99) {
+    if(myGameArea.score >= 50) {
+        myMusic.pause();
+        myMusic2.play();
         ctx2.fillText("Wow, you're good", 340, secondCanvas.height/2);
+    }
+    if(myGameArea.frameNo == 2250) {
+        spawnDiff = 30;
+        mobSpeed = 1;
     }
 
     mainSquare.newPos();
@@ -375,4 +374,8 @@ function everyInterval(n) {
     return false;
 }
 
-window.onload = startGame();
+
+
+window.onload = () => {
+    startGame();
+}
