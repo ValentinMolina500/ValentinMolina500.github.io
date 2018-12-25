@@ -21,9 +21,8 @@ myMusic2.volume = "0.7";
 var mainSquare;
 var myEnemies = [];
 //var myEnemiesUp = [];
-const distancesX = [480, 450, 420, 390, 360, 330, 300, 270, 240, 210, 180, 150,
-    120, 90, 60, 30]
-const distances = [295, 265, 235, 205, 175, 145, 115, 85, 55, 25];
+const distancesX = [46, 92, 138, 184, 230, 276, 322, 414]; //480
+const distances =  [0, 46, 92, 138, 184, 230, 276];//y 320
 var sqSpeed = 0;
 var timeSince = 0;
 
@@ -118,7 +117,7 @@ var myGameArea = {
     },
     scoreUpdate: function() {
         ctx.font = "30px Comic Sans MS";
-        ctx.fillText("score: " + this.score, 330, 50);
+        ctx.fillText("score: " + this.score, 310, 50);
     }
 }
 
@@ -208,14 +207,14 @@ function updateGameArea() {
     myGameArea.frameNo += 1;
 
     // spawning horizontal mobs
-    if (myGameArea.frameNo == 1 || everyInterval(50 - spawnDiff)) {
+    if (myGameArea.frameNo == 1 || everyInterval(40 - spawnDiff)) {
         x = canvas.width + 50;
         y = distances[Math.floor(Math.random() * distances.length)];
         myEnemies.push(new component(50, 25, x, y, enemyImage));
     }
 
     // spawning vertical mobs
-    if (everyInterval(50 - spawnDiff)) {
+    if (everyInterval(40 - spawnDiff)) {
         x = distancesX[Math.floor(Math.random() * distancesX.length)];
         y = canvas.height + 50;
         myEnemies.push(new component(25, 50, x, y, enemyUpImage));
@@ -326,11 +325,11 @@ function updateGameArea() {
             }
         }
         if(myEnemies[i].width == 50 || myEnemies[i].width == 16) {
-            myEnemies[i].x += -2 - mobSpeed;
+            myEnemies[i].x += -3 - mobSpeed;
             myEnemies[i].update();
         }
         if(myEnemies[i].width == 25) {
-            myEnemies[i].y += -2 - mobSpeed;
+            myEnemies[i].y += -3 - mobSpeed;
             myEnemies[i].update();
         }
     }
@@ -358,7 +357,7 @@ function updateGameArea() {
         ctx2.fillText("Wow, you're good", 340, secondCanvas.height/2);
     }
     if(myGameArea.frameNo == 2250) {
-        spawnDiff = 30;
+        spawnDiff = 20;
         mobSpeed = 1;
     }
 
