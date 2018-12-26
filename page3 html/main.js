@@ -80,6 +80,7 @@ var myGameArea = {
             myGameArea.y = e.touches[0].pageY;
         })
         window.addEventListener('touchend', function (e) {
+            e.preventDefault();
             myGameArea.x = false;
             myGameArea.y = false;
         })
@@ -337,10 +338,10 @@ function updateGameArea() {
     }
 
     // hero and button updates
-    /*myUpBtn.update();
+    myUpBtn.update();
     myDownBtn.update();
     myLeftBtn.update();
-    myRightBtn.update();*/
+    myRightBtn.update();
     if(myGameArea.frameNo > timeSince + 300)
     {
         mainSquare.invincible = false;
