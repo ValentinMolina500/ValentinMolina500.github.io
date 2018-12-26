@@ -15,7 +15,7 @@ var myMusic = document.querySelector('audio');
 var myMusic2 = document.getElementById('myAudio2');
 myMusic.volume = "0.7";
 myMusic2.volume = "0.7";
-setTimeout(() => myMusic.play(), 700);
+setTimeout(() => myMusic.play(), 1000);
 
 
 // initial variables
@@ -89,23 +89,25 @@ var myGameArea = {
             myGameArea.y = e.touches[0].pageY;
         })
         window.addEventListener("keydown", e => {
-            if(e.keyCode == 68)
+            e.preventDefault();
+            if(e.keyCode == 68 || e.keyCode == 39)
                 rightPressed = true;
-            else if(e.keyCode == 65)
+            else if(e.keyCode == 65 || e.keyCode == 37)
                 leftPressed = true;
-            else if(e.keyCode == 87)
+            else if(e.keyCode == 87 || e.keyCode == 38)
                 upPressed = true;
-            else if(e.keyCode == 83)
+            else if(e.keyCode == 83 || e.keyCode == 40)
                 downPressed = true;
         })
         window.addEventListener("keyup", e => {
-            if(e.keyCode == 68)
+            e.preventDefault();
+            if(e.keyCode == 68 || e.keyCode == 39)
                 rightPressed = false;
-            else if(e.keyCode == 65)
+            else if(e.keyCode == 65 || e.keyCode == 37)
                 leftPressed = false;
-            else if(e.keyCode == 87)
+            else if(e.keyCode == 87 || e.keyCode == 38)
                 upPressed = false;
-            else if(e.keyCode == 83)
+            else if(e.keyCode == 83 || e.keyCode == 40)
                 downPressed = false;
         })
         },
@@ -325,11 +327,11 @@ function updateGameArea() {
             }
         }
         if(myEnemies[i].width == 50 || myEnemies[i].width == 16) {
-            myEnemies[i].x += -3 - mobSpeed;
+            myEnemies[i].x += -2 - mobSpeed;
             myEnemies[i].update();
         }
         if(myEnemies[i].width == 25) {
-            myEnemies[i].y += -3 - mobSpeed;
+            myEnemies[i].y += -2 - mobSpeed;
             myEnemies[i].update();
         }
     }
