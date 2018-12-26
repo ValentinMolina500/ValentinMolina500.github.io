@@ -250,6 +250,14 @@ function updateGameArea() {
             myEnemies[i].x > 0)) {
             myEnemies.splice(i, 1);
         }
+        if(myEnemies[i].width == 50 || myEnemies[i].width == 16) {
+            myEnemies[i].x += -2 - mobSpeed;
+            myEnemies[i].update();
+        }
+        if(myEnemies[i].width == 25) {
+            myEnemies[i].y += -2 - mobSpeed;
+            myEnemies[i].update();
+        }
         if (mainSquare.collision(myEnemies[i])) {
             if(myEnemies[i].image == speedUpImage) {
                 if(sqSpeed < 2) {
@@ -326,14 +334,6 @@ function updateGameArea() {
                     }
                 //modalImage.src = result.data.images['downsized'].url;
             }
-        }
-        if(myEnemies[i].width == 50 || myEnemies[i].width == 16) {
-            myEnemies[i].x += -2 - mobSpeed;
-            myEnemies[i].update();
-        }
-        if(myEnemies[i].width == 25) {
-            myEnemies[i].y += -2 - mobSpeed;
-            myEnemies[i].update();
         }
     }
 
