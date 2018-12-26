@@ -338,10 +338,10 @@ function updateGameArea() {
     }
 
     // hero and button updates
-    myUpBtn.update();
+    /*myUpBtn.update();
     myDownBtn.update();
     myLeftBtn.update();
-    myRightBtn.update();
+    myRightBtn.update();*/
     if(myGameArea.frameNo > timeSince + 300)
     {
         mainSquare.invincible = false;
