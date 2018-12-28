@@ -358,6 +358,16 @@ function updateGameArea() {
                 if(myGameArea.score >= 150 && myGameArea.score < 199) {
                     modalText.innerHTML = "You lose! Your score was " + myGameArea.score +
                     ". Amazing, you're parents must be proud! Click outside the modal to try again.";
+                    emotion = "awe";
+                    giphyAPI = "https://api.giphy.com/v1/gifs/random?tag=" +
+                        emotion + "&api_key=FS7DZSLxVLnAPoHAIzv2sr3p9eo8HmOM";
+                    fetch(giphyAPI)
+                    .then(response => response.json())
+                    .then(json => {
+                        console.log(json);
+                        modalImage.src = json.data.images['downsized'].url;
+                    })
+                    .catch(err => console.log(err));
                     }
                 if(myGameArea.score > 200) {
                     modalText.innerHTML = "You lose! Your score was " + myGameArea.score +
