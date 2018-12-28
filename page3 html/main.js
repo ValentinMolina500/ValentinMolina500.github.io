@@ -12,9 +12,9 @@ var span = document.getElementsByClassName("close")[0];
 var modalText = document.querySelector("p");
 var modalImage = document.querySelector('img');
 var myMusic = document.querySelector('audio');
-var myMusic2 = document.getElementById('myAudio2');
+//var myMusic2 = document.getElementById('myAudio2');
 myMusic.volume = "0.7";
-myMusic2.volume = "0.7";
+//myMusic2.volume = "0.7";
 setTimeout(() => myMusic.play(), 1000);
 
 
@@ -63,29 +63,29 @@ var myGameArea = {
         this.frameNo = 0;
         this.interval = setInterval(updateGameArea, 20);
         window.addEventListener('mousedown', function (e) {
-            e.preventDefault();
+            //e.preventDefault();
             myGameArea.x = e.pageX;
             myGameArea.y = e.pageY;
         })
         window.addEventListener('mouseup', function (e) {
-            e.preventDefault();
+            //e.preventDefault();
             myGameArea.x = false;
             myGameArea.y = false;
         })
         window.addEventListener('touchstart', function (e) {
-            e.preventDefault();
+            //e.preventDefault();
             myGameArea.x = e.pageX;
             myGameArea.y = e.pageY;
             myGameArea.x = e.touches[0].pageX;
             myGameArea.y = e.touches[0].pageY;
         })
         window.addEventListener('touchend', function (e) {
-            e.preventDefault();
+            //e.preventDefault();
             myGameArea.x = false;
             myGameArea.y = false;
         })
         window.addEventListener("touchmove", function (e) {
-            e.preventDefault();
+            //e.preventDefault();
             myGameArea.x = e.touches[0].pageX;
             myGameArea.y = e.touches[0].pageY;
         })
@@ -170,6 +170,25 @@ class component {
         }
         return clicked;
     }
+    laser() {
+        if(this.image === enemyImage) {
+        ctx.beginPath();
+        ctx.rect(0, this.y + (this.height / 2) - 2, this.x, 4);
+        //ctx.rect()
+        ctx.fillStyle = "rgba(238, 17, 17, 0.31)";
+        ctx.fill();
+        ctx.closePath();
+        ctx.fillStyle = "black";
+        }
+        else if(this.width == 25) {
+            ctx.beginPath();
+            ctx.rect(this.x + (this.width / 2) - 2, 0, 4, this.y);
+            ctx.fillStyle = "rgba(238, 17, 17, 0.25)";
+            ctx.fill();
+            ctx.closePath();
+            ctx.fillStyle = "black";
+        }
+    }
 }
 
 function updateGameArea() {
@@ -252,10 +271,12 @@ function updateGameArea() {
         }
         if(myEnemies[i].width == 50 || myEnemies[i].width == 16) {
             myEnemies[i].x += -2 - mobSpeed;
+            myEnemies[i].laser();
             myEnemies[i].update();
         }
         if(myEnemies[i].width == 25) {
             myEnemies[i].y += -2 - mobSpeed;
+            myEnemies[i].laser();
             myEnemies[i].update();
         }
         if (mainSquare.collision(myEnemies[i])) {
@@ -279,7 +300,7 @@ function updateGameArea() {
             else if(!mainSquare.invincible){
                 myGameArea.stop();
                 myMusic.pause();
-                myMusic2.pause();
+                //myMusic2.pause();
                 modal.style.display = "block";
                 let emotion;
                 let giphyAPI;
@@ -323,6 +344,16 @@ function updateGameArea() {
                 if(myGameArea.score >= 100 && myGameArea.score < 150) {
                     modalText.innerHTML = "You lose! Your score was " + myGameArea.score +
                     ". Wow, you're pretty good at this! Click outside the modal to try again.";
+                    emotion = "Amazing";
+                    giphyAPI = "https://api.giphy.com/v1/gifs/random?tag=" +
+                        emotion + "&api_key=FS7DZSLxVLnAPoHAIzv2sr3p9eo8HmOM";
+                    fetch(giphyAPI)
+                    .then(response => response.json())
+                    .then(json => {
+                        console.log(json);
+                        modalImage.src = json.data.images['downsized'].url;
+                    })
+                    .catch(err => console.log(err));
                     }
                 if(myGameArea.score >= 150 && myGameArea.score < 199) {
                     modalText.innerHTML = "You lose! Your score was " + myGameArea.score +
@@ -361,11 +392,18 @@ function updateGameArea() {
         ctx2.fillText("Amazing!", 340, secondCanvas.height/2);
     }
     if(myGameArea.frameNo == 2250) {
-        myMusic.pause();
-        myMusic2.play();
-        spawnDiff = 20;
+        //myMusic.pause();
+        // myMusic2.play();
+        spawnDiff = 10;
         mobSpeed = 1;
     }
+    if(myGameArea.frameNo == 2250 * 3) {
+        //myMusic.pause();
+        //myMusic2.play();
+        spawnDiff += 10;
+        mobSpeed += 1;
+    }
+
 
     mainSquare.newPos();
     mainSquare.update();
