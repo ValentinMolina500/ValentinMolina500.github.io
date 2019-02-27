@@ -11,7 +11,10 @@ var wait = document.getElementById('wait');
 recognition.lang = 'en-US';
 recognition.interimResults = false;
 recognition.maxAlternatives = 5;
-button.onclick = startMic();
+
+button.onclick = function() {
+    startMic();
+}
 
 recognition.onresult = function(event) {
     wait.style.display = "none";
