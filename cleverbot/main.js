@@ -6,14 +6,15 @@ var API_KEY = "CC8srKyiHqx77hURUxkjduSJnCw";
 var cs = '';
 var textContainer = document.getElementById('mainText');
 var button = document.getElementById('speakCuh');
+var wait = document.getElementById('wait');
 
 recognition.lang = 'en-US';
 recognition.interimResults = false;
 recognition.maxAlternatives = 5;
-button.onclick = function() {
-    recognition.start();
-}
+button.onclick = startMic();
+
 recognition.onresult = function(event) {
+    wait.style.display = "none";
     var response = event.results[0][0].transcript
     console.log('You said: ', response);
     var text = document.createElement("p")
@@ -44,3 +45,7 @@ function ProcessReply(reply) {
     recognition.start();
 }
 
+function startMic() {
+    recognition.start();
+    wait.style.display = "inline";
+}
