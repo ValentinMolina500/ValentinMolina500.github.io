@@ -42,7 +42,6 @@ function ProcessReply(reply) {
     synth.speak(utterThis);
 
     textContainer.appendChild(cleverOutput);
-    recognition.start();
 }
 
 function startMic() {
