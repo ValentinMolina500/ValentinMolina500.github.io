@@ -21,7 +21,7 @@ recognition.onresult = function(event) {
     var response = event.results[0][0].transcript
     console.log('You said: ', response);
     var text = document.createElement("p")
-    text.innerHTML = response;
+    text.innerHTML = "You: " + response;
     textContainer.appendChild(text);
 
     var input = encodeURIComponent(response);
@@ -38,9 +38,8 @@ function ProcessReply(reply) {
     console.log(reply)
     cs = reply.cs;
     var utterThis = new SpeechSynthesisUtterance(reply.output);
-    console.log(synth.getVoices());
     var cleverOutput = document.createElement("p");
-    cleverOutput.innerHTML = reply.output;
+    cleverOutput.innerHTML = "AI: " + reply.output;
     utterThis.voice = voices[5];
     synth.speak(utterThis);
 
