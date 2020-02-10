@@ -1,3 +1,3 @@
-This is a project website with my buds.
+# Coding Cougs Website
 
--Ben Was here.
+The Coding Cougs are a programming club from Washington State University. 
