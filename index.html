@@ -295,7 +295,7 @@
 
                 <p>
                     Here we call our function with numbers 2 and 4, and then
-                    use the <code>move</code> instruction to register <code>$t0</code>
+                    use the <code>move</code> instruction to move the return value of our function, <code>$v0</code> register <code>$t0</code>
                 </p>
 
                 <p>
@@ -345,7 +345,7 @@
                     <br> 
                     function2: <br>
                     &nbsp;&nbsp;&nbsp;&nbsp;add $t0, $t1, $t2 <br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;jr $ra
+                        &nbsp;&nbsp;&nbsp;&nbsp;jr $ra <br>
 
                     jal function1
                 </code>
