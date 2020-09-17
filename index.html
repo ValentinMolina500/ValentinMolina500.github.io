@@ -25,17 +25,19 @@
                 <ul class="mips-instruction-list">
                     <li>
                         <h3><code>add</code></h3>
-                        <code>
-                            add $t0, $t1, $t2
-                        </code>
+                        <pre><code class="mips">
+ add $t0, $t1, $t2
+                        </code></pre>
+                       
                         <p>Computes the sum of the 2nd and 3rd register and stores it in the first register.</p>
                     </li>
                     <li>
                         <h3><code>mult</code></h3>
-                        <code>
-                            mult $t0, $t1  <br />
-                            mflo $t2 
-                        </code>
+                        <pre><code class="mips">
+mult $t0, $t1                           
+mflo $t2 
+                        </code></pre>
+            
                         <p>
                             Computes the product of two registers and stores the result in the <code>$lo</code> register.
                         </p>
@@ -46,7 +48,9 @@
                     </li>
                     <li>
                         <h3><code>li</code></h3>
-                        <code>li $t0, 10</code>
+                        <pre><code class="mips">
+li $t0, 10
+                        </code></pre>
                         <p>
                             This instruction loads a 32-bit integer value into a register.
                             It's what's known as a <strong>psuedo instruction</strong>:
@@ -58,7 +62,9 @@
                     </li>
                     <li>
                         <h3><code>move</code></h3>
-                        <code>move $t0, $t1</code>
+                        <pre><code class="mips">
+move $t0, $t1
+                        </code></pre>
                         <p>
                             Another pseudo instruction. Copies or <i>moves</i> the value of the 2nd register, into
                             the 1st register.
@@ -69,13 +75,17 @@
                             or into <code>$v</code> registers for returning values from functions
                         </p>
                         <h3><code>jal</code></h3>
-                        <code>jal someFunction</code>
+<pre><code class="mips">
+jal someFunction
+</code></pre>
                         <p>
                             Used to call functions.
                         </p>
 
                         <h3><code>jr</code></h3>
-                        <code>jr $ra</code>
+<pre><code class="mips">
+jr $ra
+</code></pre>
                         <p>
                             Used to jump to an address that is stored in a register. Most commonly used
                             in conjunction with <code>jal</code> to return out of functions
@@ -431,7 +441,7 @@ jal function2
 function1:
     add $t0, $t1, $t2
     jal function2
-    jr $rq
+    jr $ra
 </code></pre>
                 
 
