@@ -83,3 +83,9 @@ body, html {
     padding-left: 8px; 
     display: inline-block;
 }
+
+img {
+    width: inherit;
+    margin: 0 auto;
+    display: block;
+}
