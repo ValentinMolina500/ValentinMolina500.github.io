@@ -3,6 +3,8 @@
         <head>
             <meta charset="utf-8" />
             <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+            <link rel="stylesheet" href="./vendor/highlight-js/styles/atom-one-light.css">
+         
             <meta name="viewport" content="width=device-width, initial-scale=1" />
             <meta name="theme-color" content="#000000" />
             <meta
@@ -89,19 +91,16 @@
                     Let's see how to define one in MIPS.
                 </p>
 
-                <code>
-
-                    # Defining our function <br>
-                    myFunction: <br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;add $t0, $a0, $a1 <br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;move $v0, $t0 <br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;jr $ra <br>
-
-                
-
-                
-                    
-                </code> 
+           
+                <pre>
+                    <code class="mips">
+# Defining our function 
+myFunction: 
+    add $t0, $a0, $a1 
+    move $v0, $t0 
+    jr $ra 
+                    </code>
+                </pre>
                 
                 <p>
                     This is a simple function that adds two numbers and 
@@ -109,12 +108,14 @@
                 </p>
                 <p>It may be helpful to see how function would be defined in something like C:</p>
 
-                <code>
-                    int myFunction(int a, int b) { <br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;int c = a + b; <br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;return c; <br>
-                    }
-                </code>
+                <pre>
+                    <code class="c">
+int myFunction(int a, int b) {
+    int c = a + b;
+    return c; 
+}
+                    </code>
+                </pre>
 
                 <p>These two functions are functionally equivalent.</p>
                 <h3>What the heck are <code>$a</code> registers?</h3>
@@ -127,45 +128,45 @@
                     For example, let's say you want to call <code>myFunction</code> in MIPS to add the numbers 2 and 4:
                 </p>
 
-                <code>
-                    myFunction: <br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;add $t0, $a0, $a1 <br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;move $v0, $t0 <br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;jr $ra <br>
+                <pre>
+                    <code class="mips">
 
-                    <br>
+myFunction: 
+    add $t0, $a0, $a1 
+    move $v0, $t0 
+    jr $ra 
 
-                    # Loading values into our argument registers <br>
-                    li $a0, 2 <br>
-                    li $a1, 4 <br>
+# Loading values into our argument registers
+li $a0, 2
+li $a1, 4
 
-                    <br>
-
-                    # Calling our function with arguments 2, 4 <br>
-                    jal myFunction <br>
-
-                </code>
+# Calling our function with arguments
+jal myFunction
+                    </code>
+                </pre>
+                
 
                 <p>Let's walk through this example:</p>
-
-                <code>
-                    li $a0, 2 <br>
-                    li $a1, 4 <br>
-                </code>
+                <pre>
+                    <code class="mips">
+li $a0, 2
+li $a1, 4
+                    </code>
+                </pre>
 
                 <p>
                     Here we are storing the numbers 2 and 4 in <code>$a0</code>
                     and <code>$a1</code> respectively. This is because want to add those
                     numbers with our function.
                 </p>
-
-                <code>
-                    myFunction: <br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;add $t0, $a0, $a1 <br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;move $v0, $t0 <br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;jr $ra <br>
-
-                </code>
+                <pre>
+                    <code class="mips">
+myFunction: 
+    add $t0, $a0, $a1 
+    move $v0, $t0 
+    jr $ra 
+                    </code>
+                </pre>
 
                 <p>
                     Remember our function adds the numbers in the <code>$a0</code> and <code>$a1</code> register,
@@ -175,16 +176,20 @@
 
                 <p>What if I wanted to add 5 and 9?</p>
 
-                <code>
-                    li $a0, 5 <br>
-                    li $a1, 9 <br>
-                </code>
+                <pre>
+                    <code class="mips">
+li $a0, 5
+li $a1, 9
+                    </code>
+                </pre>
 
                 <p>Beautiful.</p>
 
-                <code>
-                    jal myFunction <br>
-                </code>
+                <pre>
+                    <code class="mips">
+jal myFunction
+                    </code>
+                </pre>
 
                 <p>With our arguments stored in <code>$a0</code>
                     and <code>$a1</code>, we're ready to call
@@ -215,13 +220,15 @@
                     In memory speak, we are storing the <i>address</i> of
                     where we were in our code in <code>$ra</code>.
                 </p>
-
-                <code>
-                    myFunction: <br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;add $t0, $a0, $a1 <br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;move $v0, $t0 <br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;jr $ra <br>
-                </code>
+                <pre>
+                    <code class="mips">
+myFunction: 
+    add $t0, $a0, $a1 
+    move $v0, $t0 
+    jr $ra 
+                    </code>
+                </pre>
+    
 
                 <p>
                     After the <code>jal</code> instruction, we jump to our function code.
@@ -242,29 +249,31 @@
                     the location of where we called <code>myFunction</code>:
                 </p>
 
-                <code>
-                    jal myFunction <br>
-                </code>
+                <pre>
+                    <code class="mips">
+jal myFunction
+                    </code>
+                </pre>
 
                 <p>So we would be back here and continue going through our code as usual.</p>
 
                 <p>
                     Again, let's see how this would look like in C:
                 </p>
+                <pre>
+                    <code class="c">
+// define our function
+int myFunction(int a, int b) {
+    int c = a + b;
+    return c;
+}
 
-                <code>
-                    // define our function <br>
-                    int myFunction(int a, int b) { <br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;int c = a + b; <br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;return c; <br>
-                    }
-                    <br><br>
+// Calling our function with arguments 2, 4
+myFunction(2, 4);
 
-                    // Calling our function with arguments 2, 4 <br>
-                    myFunction(2, 4);
-                    <br> <br>
-                    // Contine in our code 
-                </code>
+// Function returns and we continue with our code
+                    </code>
+                </pre>
 
                 <p>
                     Again, this is functionally equivalent to our call in MIPS.
@@ -272,26 +281,28 @@
 
                 <p> A lot of times, we call a function and stores it's result in a variable:</p>
 
-                <code>
-                    int i = myFunction(2, 4);
-                </code>
+           
+                <pre>
+                    <code class="c">
+int i = myFunction(2, 4);
+                    </code>
+                </pre>
 
                 <p>
                     To do this in MIPS, remember <code>$v</code> registers hold return values for functions.
                 </p>
+                <pre>
+                    <code class="mips">
+# ...
 
-                <code>
-                    ...
+li $a0, 2
+li $a1, 4
 
-                    <br><br>
+jal myFunction
 
-                    li $a0, 2 <br>
-                    li $a1, 4 <br>
-                    <br>
-                    jal myFunction <br>
-                    <br>
-                    move $t0, $v0
-                </code>
+move $t0, $v0
+                    </code>
+                </pre>
 
                 <p>
                     Here we call our function with numbers 2 and 4, and then
@@ -337,18 +348,21 @@
 
                 <p>Let's see what that looks like in MIPS:</p>
 
-                <code>
-                    function1: <br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;add $t0, $t1, $t2 <br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;jal function2 <br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;jr $ra <br>
-                    <br> 
-                    function2: <br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;add $t0, $t1, $t2 <br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;jr $ra <br>
-                    <br>
-                    jal function1
-                </code>
+                <pre>
+                    <code class="mips">
+function1:
+    add $t0, $t1, $t2
+    jal function2
+    jr $ra
+
+function2:
+    add $t0, $t1, $t2
+    jr $ra
+
+jal function1
+                    </code>
+                </pre>
+           
 
                 <p>
                     Here, <code>function1</code> calls <code>function2</code>, so function1 has nested functions.
@@ -359,21 +373,26 @@
                     Let's see what happens when we call <code>function1</code> as it is now with:
                 </p>
 
-                <code>
-                    jal function1
-                </code>
+                <pre>
+                    <code class="mips">
+jal function1
+                    </code>
+                </pre>
 
                 <p>
                     This instruction will jump to our <code>function1</code> code and 
                     <strong>stores the current location of this line in <code>$ra</code></strong>
                 </p>
                 
-                <code>
-                    function1: <br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;add $t0, $t1, $t2 <br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;jal function2 <br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;jr $ra <br>
-                </code>
+                <pre>
+                    <code class="mips">
+function1:
+    add $t0, $t1, $t2
+    jal function2
+    jr $ra
+                    </code>
+                </pre>
+             
 
                 <p>The first line is some example code, we can ignore it.</p>
                 <p>
@@ -388,43 +407,41 @@
                 </p>
 
                 <p>Why is that a problem? Well let's continue going line by line:</p>
-
-                <code>
-                    function2: <br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;add $t0, $t1, $t2, <br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;jr $ra
-                </code>
+<pre><code class="mips">
+function2:
+    add $t0, $t1, $t2
+    jr $ra
+</code></pre>
+         
 
                 <p>
                     This function adds some stuff and then uses <code>jr</code>
                     to jump to <code>$ra</code>. This works fine, it holds the location of line:
                     
                 </p>
-
-                <code>
-                    jal function2 <br>
-                </code>
+<pre><code class="mips">
+jal function2
+</code></pre>
+              
 
                 <p>
                     So using <code>jr $ra</code> in <code>function2</code> takes us back there:
                 </p>
-
-                <code>
-                    function1: <br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;add $t0, $t1, $t2 <br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;jal function2 <br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;jr $ra <br>
-                </code>
+<pre><code class="mips">
+function1:
+    add $t0, $t1, $t2
+    jal function2
+    jr $rq
+</code></pre>
+                
 
                 <p>
                     But the next line in <code>function1</code> is another <code>jr $ra</code>.
                     Remeber <code>$ra</code> holds the location of:
                 </p>
-
-                <code>
-                    jal function2 <br>
-                </code>
-
+<pre><code class="mips">
+jal function2
+</code></pre>
                 <p>
                     So the line <code>jr $ra</code> in function1 <strong>takes us back to that line:</strong>
                 </p>
@@ -433,11 +450,10 @@
                     You see the problem there? We're going to run the command <code>jal function2</code> again.
                     What we wanted to do really was get back to where we originally called function1, or:
                 </p>
-
-                <code>
-                    jal function1
-                </code>
-
+<pre><code class="mips">
+jal function1
+</code></pre>
+              
                 <p>
                     This is the problem of calling a function within another function, since <code>jal</code> writes
                     to the <code>$ra</code> register, the <code>$ra</code> register will get overwritten
@@ -451,35 +467,39 @@
                 <p>
                     The solution is quite simple, we add 4 lines of code to <code>function1</code>:
                 </p>
+<pre><code class="mips">
+function1:
 
-                <code>
-                    function1: <br>
-                    <br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;# save our first $ra in $sp <br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;addi $sp, $sp, -4<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;sw $ra, 0($sp) <br>
-                    <br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;add $t0, $t1, $t2 <br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;jal function2 <br>
-                    <br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;# restore $ra from $sp <br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;lw $ra, 0($sp)<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;addi $sp, $sp, 4<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;jr $ra <br>
+    # Move the stack down 4 bytes
+    addi $sp, $sp, -4
 
-                    <br> 
-                    function2: <br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;add $t0, $t1, $t2 <br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;jr $ra
+    # save our first $ra in $sp
+    sw $ra, 0($sp)
 
-                    
-                </code>
+    add $t0, $t1, $t2
+    jal function2
+
+    # restore $ra from $sp
+    lw $ra, 0($sp)
+    
+    # move the stack back 4 bytes
+    addi $sp, $sp, 4
+
+    jr $ra
+
+function2:
+    add $t0, $t1, $t2
+    jr $ra
+</code></pre>
+           
 
                 <p>Let's explain:</p>
-                <code>
-                    addi $sp, $sp, -4<br>
-                    sw $ra, 0($sp) <br>
-                </code>
+<pre><code class="mips">
+addi $sp, $sp, -4
+sw $ra, 0($sp)
+</code></pre>
+
+            
                 <p>
                     First, we make some space on stack, by setting <code>$sp</code>
                     equal to <code>$sp</code> - 4.
@@ -501,18 +521,19 @@
                     in <code>$sp</code>.
                 </p>
 
-            <code>
-                lw $ra, 0($sp)<br>
-            </code>
+<pre><code class="mips">
+lw $ra, 0($sp)
+</code></pre>
+      
                 <p>
                     It doesn't matter that <code>function2</code> overwrote <code>$ra</code>
                     we can retrieve it's value with <code>lw</code>. Since we saved <code>$ra</code>
                     at <code>0($sp)</code>, we can get it back by loading that data at <code>0($sp)</code>
                 </p>
-
-                <code>
-                    addi $sp, $sp, 4<br>
-                </code>
+<pre><code class="mips">
+addi $sp, $sp, 4
+</code></pre>
+           
 
                 <p>
                     Before returning out of <code>function1</code>, we have some clean up to do.
@@ -524,10 +545,10 @@
                     Since we made space intially in the stack to save <code>$ra</code>, we have to return
                     that space back. We subtracted 4, so now we have to add 4 to <code>$sp</code>.
                 </p>
-
-                <code>
-                    jr $ra
-                </code>
+<pre><code class="mips">
+jr $ra
+</code></pre>
+           
 
                 <p>
                     Finally, we can now <code>jr</code> to <code>$ra</code> in <code>function1</code> addition
@@ -563,5 +584,8 @@
                     </li>
                 </ul>
             </div>
+
+            <script src="./vendor/highlight-js/highlight.pack.js"></script>
+            <script>hljs.initHighlightingOnLoad();</script>
         </body>
     </html>
