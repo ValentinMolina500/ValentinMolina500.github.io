@@ -44,3 +44,5 @@ span.score {
     margin-left: 1rem;
     display: inline-block;
 }
+
+.webgl-content .footer { display: none; margin-top: 5px; height: 38px; line-height: 38px; font-family: Helvetica, Verdana, Arial, sans-serif; font-size: 18px;}
