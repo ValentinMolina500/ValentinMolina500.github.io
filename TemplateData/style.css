@@ -1,5 +1,6 @@
-.webgl-content * {border: 0; margin: 0; padding: 0}
-.webgl-content {position: absolute; top: 50%; left: 50%; -webkit-transform: translate(-50%, -50%); transform: translate(-50%, -50%);}
+
+.webgl-content * {border: 0; margin: 0; padding: 0; }
+.webgl-content { grid-column: 1; padding: 0;}
 
 .webgl-content .logo, .progress {position: absolute; left: 50%; top: 50%; -webkit-transform: translate(-50%, -50%); transform: translate(-50%, -50%);}
 .webgl-content .logo {background: url('progressLogo.Light.png') no-repeat center / contain; width: 154px; height: 130px;}
@@ -16,3 +17,47 @@
 .webgl-content .footer .webgl-logo {background-image: url('webgl-logo.png'); width: 204px; float: left;}
 .webgl-content .footer .title {margin-right: 10px; float: right;}
 .webgl-content .footer .fullscreen {background-image: url('fullscreen.png'); width: 38px; float: right;}
+
+body {
+    background: #000;
+    display: grid;
+    place-items: center;
+}
+
+.container {
+    width: 1000px;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    
+}
+
+.container aside {
+    grid-column: 2;
+}
+
+.container aside * {
+    font-family: 'Goldman', sans-serif;
+}
+.container aside h1 {
+    color: #fff;
+    padding: 0;
+    margin: 0;
+    text-align: center;
+    margin-top: 2rem;
+    font-size: 2.5rem;
+}
+
+.container aside p {
+    color: #00FF00;
+    text-align: center;
+    font-size: 1.5rem;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+}
+
+span.score {
+    color: purple;
+    margin-left: 1rem;
+    display: inline-block;
+}
