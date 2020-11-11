@@ -3,32 +3,90 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Unity WebGL Player | 2D Block Game</title>
-    <link rel="shortcut icon" href="TemplateData/favicon.ico">
-    <link rel="stylesheet" href="TemplateData/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Goldman:wght@400;700&display=swap" rel="stylesheet">
-    <link href="./styles2.css" rel="stylesheet">
-    <script src="TemplateData/UnityProgress.js"></script>
-    <script src="Build/UnityLoader.js"></script>
-    <script>
-      var unityInstance = UnityLoader.instantiate("unityContainer", "Build/Build.json", {onProgress: UnityProgress});
-    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Valentin's Site</title>
   </head>
   <body>
     <main class="container">
-        <div class="webgl-content">
-            <div id="unityContainer" style="width: 600px; height: 1000px"></div>
-            <div class="footer">
-              <div class="webgl-logo"></div>
-              <div class="fullscreen" onclick="unityInstance.SetFullscreen(1)"></div>
-              <div class="title">2D Block Game</div>
-            </div>
-          </div>
-          <aside>
-              <h1>Wall of Legends</h1>
-              <p>Andrew A. <span class="score">210</span></p>
-          </aside>
+      <img class="hero-img" src="static/val.jpg">
+      <p class="lead">
+        Hey there! My name is <strong>Valentin Molina</strong>.
+        I'm studying Computer Science at Washington State University!
+      </p>
+
+      <div class="link-container">
+
+        <a href="https://github.com/ValentinMolina500" target="_blank">
+          <img class="github-logo" src="static/github.png" alt="Check out my Github!">
+        </a>
+
+        <a href="https://github.com/ValentinMolina500" target="_blank">
+          <img class="twitter-logo" src="static/twitter.png" alt="Follow me on Twitter!">
+        </a>
+
+        <a href="https://github.com/ValentinMolina500" target="_blank">
+          <img class="linkedin-logo" src="static/linkedin.png" alt="Follow me on Twitter!">
+        </a>
+      </div>
+
+      <section class="blog-section">
+        <div class="section-heading">
+          <h2 class="heading">Blog</h2>
+          <p class="lead">Mildy entertaining rantings.</p>
+        </div>
+
+         <ul class="project-list">
+          <li class="list-item">
+            <a class="container" href="blog/love-computer.html" target="_self">
+              <img id="outrunPreview" src="static/outrun_preview.png">
+              <div class="text-container">
+                <h3 class="project-title">I love my computer :)</h3>
+                <p class="project-description">
+                  Really, I do.
+                </p>
+              </div>
+            </a>
+          </li>
+        </ul>
+      </section>
+
+      <section class="projects-section">
+        <div class="section-heading">
+          <h2 class="heading">Projects</h2>
+          <p class="lead">Maybe one day I'll finish one of these...</p>
+        </div>
+
+        <ul class="project-list">
+          <li class="list-item">
+            <a class="container" href="outrun.html" target="_blank">
+              <img id="outrunPreview" src="static/outrun_preview.png">
+              <div class="text-container">
+                <h3 class="project-title">Outrun</h3>
+                <p class="project-description">
+                  A 2D Unity game based on avoiding random blocks
+                </p>
+              </div>
+            </a>
+          </li>
+
+          <li class="list-item">
+            <a class="container" href="https://schedulesync-60855.firebaseapp.com/" target="_blank">
+              <img id="outrunPreview" src="static/outrun_preview.png">
+              <div class="text-container">
+                <h3 class="project-title">Schedule Sync</h3>
+                <p class="project-description">
+                  A web app for finding times to meet with people
+                </p>
+              </div>
+            </a>
+          </li>
+
+
+        </ul>
+      </section>
+
+
     </main>
-    
   </body>
 </html>

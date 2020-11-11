@@ -1,0 +1,142 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap');
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+main.container {
+    max-width: 35rem;
+    width: 100%;
+    margin: 0 auto;
+    padding: 4rem 2rem;
+
+}
+
+img.hero-img {
+    width: 100px;
+    height: 100px;
+    border-radius: 9999px;
+    display: block;
+    margin: 0 auto;
+    margin-bottom: 2rem;
+}
+
+p.lead {
+    font-family: 'Inter', sans-serif;
+    color: #333;
+    border-radius: 0.25rem;
+    font-size: 1rem;
+}
+
+strong {
+    color:  #4299e1;
+}
+
+div.link-container {
+    margin-top: 2rem;
+    padding: 1rem 1rem;
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+    background-color: #edf2f7;
+}
+
+img.github-logo, .twitter-logo, .linkedin-logo {
+    margin: 0 1rem;
+}
+
+.twitter-logo {
+    height: 32px;
+    width: 32px;
+}
+
+.linkedin-logo {
+    height: 32px;
+}
+
+section {
+    margin-top: 4rem;
+}
+
+
+.blog-section .section-heading > .heading {
+    color: #4c51bf;
+}
+
+
+.section-heading > .heading {
+    font-size: 1.5rem;
+    color: #6b46c1;
+    font-family: 'Inter', sans-serif;
+}
+
+.section-heading > .lead {
+    /*font-weight: 300;*/
+    color: #333;
+}
+
+ul.project-list {
+    list-style: none;
+}
+
+ul.project-list > li {
+  padding: 2rem 0;
+}
+
+ul.project-list > li:not(:last-child) {
+    border-bottom: 1px solid #e2e8f0;
+}
+
+#outrunPreview {
+    height: 56px;
+    width: 56px;
+    grid-column: 1;
+}
+
+.list-item  > .container {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-column-gap: 2rem;
+    align-items: center;
+
+}
+
+.list-item > .container .text-container {
+    grid-column: 2;
+}
+
+.project-title {
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    color: #9f7aea;
+
+}
+
+a {
+    text-decoration: none;
+}
+
+a:link {
+    color: #333;
+}
+
+a:visited {
+    color: #333;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.project-description {
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    color: #333;
+}
+
+.blog-section .project-title {
+    color: #667eea;
+}

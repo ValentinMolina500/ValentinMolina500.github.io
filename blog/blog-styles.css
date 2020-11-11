@@ -1,0 +1,51 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap');
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+main.container {
+    max-width: 35rem;
+    width: 100%;
+    margin: 0 auto;
+    padding: 4rem 2rem;
+
+}
+
+main.container > * {
+    color: #333;
+    font-family: 'Inter', monospace;
+}
+
+h1 {
+    font-size: 2.5em;
+    line-height: calc(1ex / 0.42);
+    margin: calc(1ex / 0.42) 0;
+    font-weight: 500;
+}
+
+h2 {
+    font-size: 2em;
+    line-height: calc(1ex / 0.42);
+    margin: calc(1ex / 0.42) 0;
+}
+
+ h3 {
+    font-size: 1.75em;
+    line-height: calc(1ex / 0.38);
+    margin: calc(1ex / 0.38) 0;
+}
+
+h4 {
+    font-size: 1.5em;
+    line-height: calc(1ex / 0.37);
+    margin: calc(1ex / 0.37) 0;
+}
+
+p {
+    font-size: 1em;
+    line-height: calc(1ex / 0.32);
+    margin: calc(1ex / 0.32) 0;
+}
